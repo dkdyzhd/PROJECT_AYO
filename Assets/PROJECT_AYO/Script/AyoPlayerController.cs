@@ -13,6 +13,11 @@ namespace AYO
 
         [Range(0.0f, 0.3f)] public float rotationSmoothTime = 0.12f;
 
+        public float topClamp = 70.0f;
+        public float bottomClamp = -30.0f;
+        public GameObject cinemachineCameraTarget;
+        public float cameraAngleOverride = 0.0f;
+
         private Animator animator;
         private CharacterController controller;
         private Camera mainCamera;
@@ -26,6 +31,9 @@ namespace AYO
         private float verticalVelocity;
 
         private Vector2 look;
+        private const float _threshold = 0.01f;
+        private float cinemachineTargetYaw;
+        private float cinemachineTargetPitch;
 
         private bool isEnableMovement = true;
 
@@ -38,27 +46,58 @@ namespace AYO
             mainCamera = Camera.main;
         }
 
+        private void Start()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
         private void Update()
         {
+            //player move
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
             move = new Vector2(horizontal, vertical);
-            float hMouse = Input.GetAxis("Mouse X");
-            float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
-            look = new Vector2(hMouse, vMouse);
-
+            isSprint = Input.GetKey(KeyCode.LeftShift);
             Move();
 
             animator.SetFloat("Speed", animationBlend);
+            //animator.SetFloat("Speed", isSprint ? 5.0f : 3.0f);
             animator.SetFloat("Horizontal", move.x);
             animator.SetFloat("Vertical", move.y);
         }
 
+        private void LateUpdate()
+        {
+            CameraRotation();
+        }
+
+        private void CameraRotation()
+        {
+            // if there is an input and camera position is not fixed
+            if (look.sqrMagnitude >= _threshold)
+            {
+                //Don't multiply mouse input by Time.deltaTime;
+                float deltaTimeMultiplier = 1.0f;
+
+                cinemachineTargetYaw += look.x * deltaTimeMultiplier;
+                cinemachineTargetPitch += look.y * deltaTimeMultiplier;
+            }
+
+            // clamp our rotations so our values are limited 360 degrees
+            cinemachineTargetYaw = ClampAngle(cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, topClamp);
+
+            // Cinemachine will follow this target
+            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
+                cinemachineTargetYaw, 0.0f);
+        }
+
         private void Move()
         {
-            if (!isEnableMovement)
-                return;
+            //if (!isEnableMovement)
+                //return;
 
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = isSprint ? sprintSpeed : moveSpeed;
@@ -107,11 +146,11 @@ namespace AYO
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref rotationVelocity,
                     rotationSmoothTime);
 
-                if (!isStrafe)
-                {
-                    // rotate to face input direction relative to camera position
-                    transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-                }
+                //if (!isStrafe){}
+                
+                // rotate to face input direction relative to camera position
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                
             }
 
 
@@ -122,5 +161,13 @@ namespace AYO
             controller.Move(targetDirection.normalized * (speed * Time.deltaTime) +
                              new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
         }
+
+        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+        {
+            if (lfAngle < -360f) lfAngle += 360f;
+            if (lfAngle > 360f) lfAngle -= 360f;
+            return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
     }
 }
