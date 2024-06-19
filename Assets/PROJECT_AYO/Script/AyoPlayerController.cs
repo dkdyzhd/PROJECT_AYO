@@ -66,6 +66,12 @@ namespace AYO
             //animator.SetFloat("Speed", isSprint ? 5.0f : 3.0f);
             animator.SetFloat("Horizontal", move.x);
             animator.SetFloat("Vertical", move.y);
+
+            if(Input.GetKey(KeyCode.F))
+            {
+                animator.SetTrigger("Trigger_Eat");
+            }
+
         }
 
         private void LateUpdate()
