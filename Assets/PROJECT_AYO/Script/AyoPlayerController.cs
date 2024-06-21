@@ -21,6 +21,7 @@ namespace AYO
         private Animator animator;
         private CharacterController controller;
         private Camera mainCamera;
+        private InteractionSensor interactionSensor;
 
         private bool isSprint = false;
         private Vector2 move;
@@ -44,12 +45,29 @@ namespace AYO
             animator = GetComponentInChildren<Animator>();
             controller = GetComponent<CharacterController>();
             mainCamera = Camera.main;
+            interactionSensor = GetComponentInChildren<InteractionSensor>();
         }
 
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        private void OnEnable()
+        {
+            interactionSensor.Ondected += OnDectedInteraction;
+            interactionSensor.OnLost += OnLostInteraction;
+        }
+
+        private void OnDectedInteraction(IInteractable interactable)
+        {
+            InteractionUI.Instance.AddInteractionData(interactable);
+        }
+
+        private void OnLostInteraction(IInteractable interactable)
+        {
+            InteractionUI.Instance.RemoveInteractionData(interactable);
         }
 
         private void Update()
@@ -67,8 +85,10 @@ namespace AYO
             animator.SetFloat("Horizontal", move.x);
             animator.SetFloat("Vertical", move.y);
 
-            if(Input.GetKey(KeyCode.F))
+            if(Input.GetKey(KeyCode.E))
             {
+                InteractionUI.Instance.DoInteract();
+
                 animator.SetTrigger("Trigger_Eat");
             }
 

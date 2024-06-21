@@ -6,16 +6,80 @@ namespace AYO
 {
     public class InteractionUI : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        public static InteractionUI Instance { get; private set;} =null;
+
+        public Transform root;
+        public InteractionUI_ListItem itemPrefab;
+
+        public List<InteractionUI_ListItem> createditems = new List<InteractionUI_ListItem>();
+        public int selectedIndex = 0;
+
+        private void Awake()
         {
-        
+            Instance = this;
+            itemPrefab.gameObject.SetActive(false);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void AddInteractionData(IInteractable interactableData)
         {
-        
+            var newitemList = Instantiate(itemPrefab, root);
+            newitemList.gameObject.SetActive(true);
+
+            newitemList.DataKey = interactableData.Key;
+            newitemList.Message = interactableData.Message;
+            newitemList.InteractionData = interactableData;
+            newitemList.IsSelected = false;
+
+            createditems.Add(newitemList);
+        }
+
+        public void RemoveInteractionData(IInteractable interactableData)
+        {
+            var targetitem = createditems.Find(x => x.DataKey.Equals(interactableData));
+            if (targetitem != null)
+            {
+                createditems.Remove(targetitem);
+                Destroy(targetitem.gameObject);
+            }
+        }
+
+        public void SelectPrev()
+        {
+            if (createditems.Count > 0)
+            {
+                if (selectedIndex >= 0 && selectedIndex < createditems.Count)
+                {
+                    createditems[selectedIndex].IsSelected = false;
+                }
+
+                selectedIndex--;
+                selectedIndex = Mathf.Clamp(selectedIndex, 0, createditems.Count - 1);
+                createditems[selectedIndex].IsSelected = true;
+            }
+
+        }
+
+        public void SelectNext()
+        {
+            if (createditems.Count > 0)
+            {
+                if (selectedIndex >= 0 && selectedIndex < createditems.Count)
+                {
+                    createditems[selectedIndex].IsSelected = false;
+                }
+
+                selectedIndex++;
+                selectedIndex = Mathf.Clamp(selectedIndex, 0, createditems.Count - 1);
+                createditems[selectedIndex].IsSelected = true;
+            }
+        }
+
+        public void DoInteract()
+        {
+            if (createditems.Count > 0 && selectedIndex >= 0)
+            {
+                createditems[selectedIndex].interactionData.Interact();
+            }
         }
     }
 }

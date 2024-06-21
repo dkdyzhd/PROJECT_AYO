@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AYO
 {
-    public class IInteraction_ListItem : MonoBehaviour
+    public class InteractionItem : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()
