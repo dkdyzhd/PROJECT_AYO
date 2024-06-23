@@ -6,6 +6,8 @@ namespace AYO
 {
     public class InteractionSensor : MonoBehaviour
     {
+        public bool HasInteractable => interactables.Count > 0;
+
         public List<IInteractable> interactables = new List<IInteractable>();
 
         public System.Action<IInteractable> Ondected;
@@ -15,7 +17,10 @@ namespace AYO
         {
             if(other.transform.root.TryGetComponent(out IInteractable interactable))
             {
+                Debug.Log("충돌");
                 interactables.Add(interactable);
+
+                Ondected?.Invoke(interactable);
             }
         }
 
@@ -23,7 +28,10 @@ namespace AYO
         {
             if (other.transform.root.TryGetComponent(out IInteractable interactable))
             {
+                Debug.Log("지나침");
                 interactables.Remove(interactable);
+
+                OnLost?.Invoke(interactable);
             }
         }
     }

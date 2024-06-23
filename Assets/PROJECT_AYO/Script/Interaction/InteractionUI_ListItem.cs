@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AYO
 {
@@ -31,9 +32,9 @@ namespace AYO
 
 
         public GameObject selection;
-        public TMPro.TextMeshPro text;
-        public IInteractable interactionData;
+        public Text text;
 
+        public IInteractable interactionData;
         private string key;
 
     }
