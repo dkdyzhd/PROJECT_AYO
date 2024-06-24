@@ -17,7 +17,6 @@ namespace AYO
         private void Awake()
         {
             Instance = this;
-            itemPrefab.gameObject.SetActive(false);
         }
 
         public void AddInteractionData(IInteractable interactableData)
@@ -35,12 +34,13 @@ namespace AYO
 
         public void RemoveInteractionData(IInteractable interactableData)
         {
-            var targetitem = createditems.Find(x => x.DataKey.Equals(interactableData));
+            var targetitem = createditems.Find(x => x.DataKey.Equals(interactableData.Key));
             if (targetitem != null)
             {
                 createditems.Remove(targetitem);
                 Destroy(targetitem.gameObject);
             }
+
         }
 
         public void SelectPrev()

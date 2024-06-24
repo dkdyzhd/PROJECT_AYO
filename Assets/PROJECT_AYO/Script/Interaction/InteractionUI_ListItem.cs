@@ -32,7 +32,7 @@ namespace AYO
 
 
         public GameObject selection;
-        public Text text;
+        public TMPro.TextMeshProUGUI text;
 
         public IInteractable interactionData;
         private string key;

@@ -13,6 +13,7 @@ namespace AYO
 
         TitleUI,
         LoadingUI,
+        InventoryUI,
 
         SCENE_PANEL_END, //Panel End
         SCENE_POPUP_START, //Popup Start

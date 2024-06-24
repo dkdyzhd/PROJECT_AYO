@@ -1,9 +1,12 @@
 using UnityEngine;
 
-[CreateAssetMenu]
-public class Item : ScriptableObject
+namespace AYO
 {
-    public string itemName;
-    public Sprite itemImage;
+    [CreateAssetMenu]
+    public class Item : ScriptableObject
+    {
+        public string itemName;
+        public Sprite itemImage;
+    }
 }
 

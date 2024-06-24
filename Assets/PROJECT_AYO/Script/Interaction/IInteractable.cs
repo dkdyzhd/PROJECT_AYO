@@ -12,5 +12,6 @@ namespace AYO
         public string Message { get; }
 
         public void Interact();
+
     }
 }

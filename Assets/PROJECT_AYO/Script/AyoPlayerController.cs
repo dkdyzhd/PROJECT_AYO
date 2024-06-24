@@ -18,6 +18,9 @@ namespace AYO
         public GameObject cinemachineCameraTarget;
         public float cameraAngleOverride = 0.0f;
 
+        [Header("Inventory")]
+        public Inventory inventory;
+
         private Animator animator;
         private CharacterController controller;
         private Camera mainCamera;
@@ -72,8 +75,15 @@ namespace AYO
 
         private void Update()
         {
-            //player move
-            float horizontal = Input.GetAxis("Horizontal");
+            //레이캐스트
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
+            }
+
+                //player move
+                float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
             move = new Vector2(horizontal, vertical);
@@ -88,11 +98,37 @@ namespace AYO
             if(Input.GetKey(KeyCode.E))
             {
                 InteractionUI.Instance.DoInteract();
+                //PickUpCheckObject();
 
-                animator.SetTrigger("Trigger_Eat");
+                //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
+
+                //animator.SetTrigger("Trigger_Eat");
+            }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                InteractionUI.Instance.SelectNext();
+            }
+
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                InteractionUI.Instance.SelectPrev();
             }
 
         }
+
+        /*void PickUpCheckObject()
+        {
+            IObjectItem pickupInterface = transform.gameObject.GetComponent<IObjectItem>();
+
+            if (pickupInterface != null)
+            {
+                Item item = pickupInterface.PickUp();
+                print($"{item.itemName}");
+                inventory.AddItem(item);
+            }
+        }*/
+        
 
         private void LateUpdate()
         {
