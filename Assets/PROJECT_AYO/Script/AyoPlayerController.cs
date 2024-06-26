@@ -18,8 +18,9 @@ namespace AYO
         public GameObject cinemachineCameraTarget;
         public float cameraAngleOverride = 0.0f;
 
-        [Header("Inventory")]
-        public Inventory inventory;
+        // InventoryUI 함수에서 static 속성으로 Instance를 선언해놓았기 때문에 따로 안해도됨
+        // [Header("Inventory")]
+        // public InventoryUI inventoryUI;
 
         private Animator animator;
         private CharacterController controller;
