@@ -29,6 +29,11 @@ namespace AYO
             Instance = this;
         }
 
+        private void Start()
+        {
+            CheckItem();
+        }
+
         private void OnDestroy()
         {
             Instance = null;

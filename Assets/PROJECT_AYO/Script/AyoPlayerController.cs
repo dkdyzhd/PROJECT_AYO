@@ -11,8 +11,18 @@ namespace AYO
         public float sprintSpeed = 5.0f;
         public float speedChangeRate = 10.0f;
 
+        [Header("Camera Setting")]
+        public float cameraHorizontalSpeed = 2.0f;
+        public float cameraVerticalSpeed = 2.0f;
+
         [Range(0.0f, 0.3f)] public float rotationSmoothTime = 0.12f;
 
+        [Header("Weapon Holder")]
+
+        [Header("Weapon FOV")]
+        //public float defaultFOV;
+
+        [Header("Camera Clamping")]
         public float topClamp = 70.0f;
         public float bottomClamp = -30.0f;
         public GameObject cinemachineCameraTarget;
@@ -42,7 +52,7 @@ namespace AYO
 
         private bool isEnableMovement = true;
 
-        private bool isStrafe = false;
+        //private bool isStrafe = false;
 
         private void Awake()
         {
@@ -76,6 +86,8 @@ namespace AYO
 
         private void Update()
         {
+            //CameraSystem.Instance.TargetFOV = defaultFOV;
+
             //레이캐스트
             if (Input.GetMouseButtonDown(0))
             {
@@ -83,11 +95,17 @@ namespace AYO
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
             }
 
-                //player move
-                float horizontal = Input.GetAxis("Horizontal");
+            //player move
+            float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
             move = new Vector2(horizontal, vertical);
+
+            //Mouse 이동에 따른 camera 움직임
+            float hMouse = Input.GetAxis("Mouse X");
+            float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
+            look = new Vector2(hMouse, vMouse);
+
             isSprint = Input.GetKey(KeyCode.LeftShift);
             Move();
 
@@ -144,8 +162,8 @@ namespace AYO
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = 1.0f;
 
-                cinemachineTargetYaw += look.x * deltaTimeMultiplier;
-                cinemachineTargetPitch += look.y * deltaTimeMultiplier;
+                cinemachineTargetYaw += look.x * deltaTimeMultiplier * cameraHorizontalSpeed;
+                cinemachineTargetPitch += look.y * deltaTimeMultiplier * cameraVerticalSpeed;
             }
 
             // clamp our rotations so our values are limited 360 degrees

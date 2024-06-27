@@ -6,9 +6,9 @@ namespace AYO
 {
     public class CameraSystem : MonoBehaviour
     {
-        public static CameraSystem instance { get; private set; } = null;
+        public static CameraSystem Instance { get; private set; } = null;
 
-        // public bool IsTPSMode { get {return isTPSMode;} }
+        //public bool IsTPSMode { get {return isTPSMode;} }
 
         /// <summary>
         /// 현재 CameraSystem이 TPS모드로 작동하고 있는지 여부 값
@@ -25,7 +25,7 @@ namespace AYO
 
         private void Awake()
         {
-            instance = this;
+            Instance = this;
         }
         private void Start()
         {
@@ -34,7 +34,7 @@ namespace AYO
 
         private void OnDestroy()
         {
-            instance = null;
+            Instance = null;
 
         }
 
