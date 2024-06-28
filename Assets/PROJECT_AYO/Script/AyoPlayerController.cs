@@ -6,6 +6,8 @@ namespace AYO
 {
     public class AyoPlayerController : MonoBehaviour
     {
+        public static AyoPlayerController Instance { get; private set; } = null;
+
         [Header("Character Setting")]
         public float moveSpeed = 3.0f;
         public float sprintSpeed = 5.0f;
@@ -31,6 +33,8 @@ namespace AYO
         // InventoryUI 함수에서 static 속성으로 Instance를 선언해놓았기 때문에 따로 안해도됨
         // [Header("Inventory")]
         // public InventoryUI inventoryUI;
+        [Header("Inventory Bag")]
+        public GameObject inventoryBag;
 
         private Animator animator;
         private CharacterController controller;
@@ -50,6 +54,7 @@ namespace AYO
         private float cinemachineTargetYaw;
         private float cinemachineTargetPitch;
 
+        private bool isInventoryBag = false;
         private bool isEnableMovement = true;
 
         //private bool isStrafe = false;
@@ -95,6 +100,13 @@ namespace AYO
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
             }
 
+            if (Input.GetKey(KeyCode.Tab))
+            {
+                isInventoryBag = true;
+            }
+
+            InventoryBag();
+
             //player move
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
@@ -117,11 +129,15 @@ namespace AYO
             if(Input.GetKey(KeyCode.E))
             {
                 InteractionUI.Instance.DoInteract();
-                //PickUpCheckObject();
-
+                
+                animator.SetTrigger("Trigger_ItemPick");
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
+            }
 
-                //animator.SetTrigger("Trigger_Eat");
+            if (Input.GetMouseButton(0))
+            {
+                animator.SetTrigger("Trigger_Axe");
+                //To do : 무기에 따라서 모션 변경
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -136,22 +152,22 @@ namespace AYO
 
         }
 
-        /*void PickUpCheckObject()
-        {
-            IObjectItem pickupInterface = transform.gameObject.GetComponent<IObjectItem>();
-
-            if (pickupInterface != null)
-            {
-                Item item = pickupInterface.PickUp();
-                print($"{item.itemName}");
-                inventory.AddItem(item);
-            }
-        }*/
-        
-
         private void LateUpdate()
         {
             CameraRotation();
+        }
+
+        private void InventoryBag()
+        {
+            if (isInventoryBag)
+            {
+                inventoryBag.gameObject.SetActive(true);
+                isInventoryBag = false;
+            }
+            else
+            {
+                inventoryBag.gameObject.SetActive(false);
+            }
         }
 
         private void CameraRotation()

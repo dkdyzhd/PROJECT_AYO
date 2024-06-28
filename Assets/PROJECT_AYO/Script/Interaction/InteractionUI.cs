@@ -79,6 +79,7 @@ namespace AYO
             if (createditems.Count > 0 && selectedIndex >= 0)
             {
                 createditems[selectedIndex].interactionData.Interact();
+                //AyoPlayerController.Instance.animator.SetTrigger("Trigger_ItemPick");
             }
         }
     }
