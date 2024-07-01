@@ -12,6 +12,8 @@ namespace AYO
     {
         public static InventoryUI Instance { get; private set; } = null;
 
+        public GameObject inventoryUI;
+
         public Image Slot1 => inventorySlots[0];
         public Image Slot2 => inventorySlots[1];
         public Image Slot3 => inventorySlots[2];
@@ -31,12 +33,26 @@ namespace AYO
 
         private void Start()
         {
+            inventoryUI.SetActive(false);   // 처음에는 인벤토리 off
             CheckItem();
         }
 
         private void OnDestroy()
         {
             Instance = null;
+        }
+
+        public void OnInventory()
+        {
+            if(inventoryUI.activeInHierarchy)
+            {
+                inventoryUI.SetActive(false);
+            }
+
+            else
+            {
+                inventoryUI.SetActive(true);
+            }
         }
 
         public void CheckItem() // Update 는 매프레임 체크하는 것이기 때문에 AddItem 함수 마지막에 호출

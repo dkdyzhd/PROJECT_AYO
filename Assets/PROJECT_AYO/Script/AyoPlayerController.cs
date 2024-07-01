@@ -102,10 +102,9 @@ namespace AYO
 
             if (Input.GetKey(KeyCode.Tab))
             {
-                isInventoryBag = true;
+                InventoryUI.Instance.OnInventory();
             }
 
-            InventoryBag();
 
             //player move
             float horizontal = Input.GetAxis("Horizontal");
@@ -157,18 +156,6 @@ namespace AYO
             CameraRotation();
         }
 
-        private void InventoryBag()
-        {
-            if (isInventoryBag)
-            {
-                inventoryBag.gameObject.SetActive(true);
-                isInventoryBag = false;
-            }
-            else
-            {
-                inventoryBag.gameObject.SetActive(false);
-            }
-        }
 
         private void CameraRotation()
         {
