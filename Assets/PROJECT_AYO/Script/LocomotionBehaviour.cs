@@ -8,8 +8,15 @@ namespace AYO
     {
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            var controller = animator.transform.root.GetComponent<AyoPlayerController>();
+            //var controller = animator.transform.root.GetComponent<AyoPlayerController>();
             
         }
+
+        public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            var controller = animator.transform.root.GetComponent<AyoPlayerController>();
+            controller.IsEnableMovement = false;
+        }
     }
+
 }

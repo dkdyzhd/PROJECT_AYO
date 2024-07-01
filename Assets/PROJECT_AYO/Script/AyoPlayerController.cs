@@ -8,6 +8,11 @@ namespace AYO
     {
         public static AyoPlayerController Instance { get; private set; } = null;
 
+        public bool IsEnableMovement
+        {
+            set => isEnableMovement = value;
+        }
+
         [Header("Character Setting")]
         public float moveSpeed = 3.0f;
         public float sprintSpeed = 5.0f;
@@ -40,6 +45,7 @@ namespace AYO
         private CharacterController controller;
         private Camera mainCamera;
         private InteractionSensor interactionSensor;
+        private TreeSensor treeSensor;
 
         private bool isSprint = false;
         private Vector2 move;
@@ -54,6 +60,8 @@ namespace AYO
         private float cinemachineTargetYaw;
         private float cinemachineTargetPitch;
 
+        private float axingDamage = 20.0f;
+
         private bool isInventoryBag = false;
         private bool isEnableMovement = true;
 
@@ -65,6 +73,7 @@ namespace AYO
             controller = GetComponent<CharacterController>();
             mainCamera = Camera.main;
             interactionSensor = GetComponentInChildren<InteractionSensor>();
+            treeSensor = GetComponentInChildren<TreeSensor>();
         }
 
         private void Start()
@@ -94,13 +103,13 @@ namespace AYO
             //CameraSystem.Instance.TargetFOV = defaultFOV;
 
             //레이캐스트
-            if (Input.GetMouseButtonDown(0))
+            /*if (Input.GetMouseButtonDown(0))
             {
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
-            }
+            }*/
 
-            if (Input.GetKey(KeyCode.Tab))
+            if (Input.GetKeyDown(KeyCode.Tab))  // Down으로 해야 한번으로 입력이 됨 > GetKey는 여러번 입력
             {
                 InventoryUI.Instance.OnInventory();
             }
@@ -125,7 +134,7 @@ namespace AYO
             animator.SetFloat("Horizontal", move.x);
             animator.SetFloat("Vertical", move.y);
 
-            if(Input.GetKey(KeyCode.E))
+            if(Input.GetKeyDown(KeyCode.E))
             {
                 InteractionUI.Instance.DoInteract();
                 
@@ -133,9 +142,26 @@ namespace AYO
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
-                animator.SetTrigger("Trigger_Axe");
+                CollectableResource tree = treeSensor.GetClosedTree();
+                if (tree != null)
+                {
+                    Vector3 dir = tree.transform.position - transform.position;
+                    transform.forward = dir.normalized;
+                    animator.SetTrigger("Trigger_Axe");
+
+                    float currentHp = tree.resourceHp - axingDamage;
+                    tree.resourceHp = currentHp;
+                    Debug.Log(currentHp);
+
+                    if (currentHp == 0)
+                    {
+                        CollectableResource.Instance.OnDestroy();
+                    }
+                }
+
+                // To do : 나무에 Hp를 만들거나 hitCount를 만들어서 Destory되도록
                 //To do : 무기에 따라서 모션 변경
             }
 

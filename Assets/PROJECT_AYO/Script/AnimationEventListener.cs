@@ -6,11 +6,12 @@ namespace AYO
 {
     public class AnimationEventListener : MonoBehaviour
     {
-        public System.Action<string> OnTakeAnimationEvent;
+        public System.Action<string> OnTakenAnimationEvent;
 
         public void OnAnimationEvent(string eventName)
         {
-           //if(eventName.Equals(""))
+            //if(eventName.Equals(""))
+            OnTakenAnimationEvent?.Invoke(eventName);
         }
     }
 }
