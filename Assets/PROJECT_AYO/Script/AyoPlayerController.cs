@@ -151,14 +151,15 @@ namespace AYO
                     transform.forward = dir.normalized;
                     animator.SetTrigger("Trigger_Axe");
 
-                    float currentHp = tree.resourceHp - axingDamage;
-                    tree.resourceHp = currentHp;
-                    Debug.Log(currentHp);
+                    tree.Damage(axingDamage);
 
-                    if (currentHp == 0)
-                    {
-                        CollectableResource.Instance.OnDestroy();
-                    }
+                    //float currentHp = tree.resourceHp - axingDamage;
+                    //tree.resourceHp = currentHp;
+                    //Debug.Log(currentHp);
+                    //if (currentHp == 0)
+                    //{
+                    //    CollectableResource.Instance.OnDestroy();
+                    //}
                 }
 
                 // To do : 나무에 Hp를 만들거나 hitCount를 만들어서 Destory되도록

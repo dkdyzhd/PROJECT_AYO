@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,15 +25,11 @@ namespace AYO
                         result = detectedTree[i];   //탐지된나무를 결과로 저장
                         beforeDistance = distance;  //before 거리를 거리값과 동일하게 저장
                     }
-
-                    if(CollectableResource.Instance == null)
-                    {
-                        detectedTree.RemoveAt(i);   //오류남->
-                    }
                 }
             }
             // 탐지된 나무중 가장 가까운나무를 return
             return result;
+            
         }
 
         private void OnTriggerEnter(Collider other)
@@ -41,9 +38,15 @@ namespace AYO
             {
                 if (collectableResource.ResourceType == CollectResourceType.Tree)   // Tree가 trigger로 들어왔다면
                 {
+                    collectableResource.OnResourceDestroy += OnResourceDestroyNotified;
                     detectedTree.Add(collectableResource);  //탐지된나무로 추가
                 }
             }
+        }
+
+        private void OnResourceDestroyNotified(CollectableResource resource)
+        {
+            detectedTree.Remove(resource);
         }
 
         private void OnTriggerExit(Collider other)
@@ -52,6 +55,7 @@ namespace AYO
             {
                 if (collectableResource.ResourceType == CollectResourceType.Tree)   // trigger에서 나가면 
                 {
+                    collectableResource.OnResourceDestroy -= OnResourceDestroyNotified;
                     detectedTree.Remove(collectableResource);   // 제거
                 }
             }

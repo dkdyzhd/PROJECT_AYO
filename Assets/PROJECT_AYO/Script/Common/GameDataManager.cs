@@ -10,7 +10,21 @@ namespace AYO
 
         public List<Item> ItemDataList = new List<Item>();
 
+        public bool isGameOver;
 
+        public CharacterBase playercharacter;
+
+        private void Start()
+        {
+            playercharacter.onCharacterDead += GameOverCheck;   //onCharacterDead에 체인을 거는것
+            
+        }
+
+        public void GameOverCheck()
+        {
+            //To do: 
+            Debug.Log("GameOver");
+        }
 
         private void Awake()
         {
