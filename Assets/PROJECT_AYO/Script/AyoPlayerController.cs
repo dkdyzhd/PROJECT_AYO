@@ -41,11 +41,13 @@ namespace AYO
         [Header("Inventory Bag")]
         public GameObject inventoryBag;
 
+        private Rigidbody rigidbody;
         private Animator animator;
         private CharacterController controller;
         private Camera mainCamera;
         private InteractionSensor interactionSensor;
         private TreeSensor treeSensor;
+        private RockSensor rockSensor;
 
         private bool isSprint = false;
         private Vector2 move;
@@ -69,11 +71,13 @@ namespace AYO
 
         private void Awake()
         {
+            rigidbody = GetComponent<Rigidbody>();
             animator = GetComponentInChildren<Animator>();
             controller = GetComponent<CharacterController>();
             mainCamera = Camera.main;
             interactionSensor = GetComponentInChildren<InteractionSensor>();
             treeSensor = GetComponentInChildren<TreeSensor>();
+            rockSensor = GetComponentInChildren<RockSensor>();
         }
 
         private void Start()
@@ -145,6 +149,8 @@ namespace AYO
             if (Input.GetMouseButtonDown(0))
             {
                 CollectableResource tree = treeSensor.GetClosedTree();
+                CollectableResource rock = rockSensor.GetClosedRock();
+
                 if (tree != null)
                 {
                     Vector3 dir = tree.transform.position - transform.position;
@@ -160,6 +166,14 @@ namespace AYO
                     //{
                     //    CollectableResource.Instance.OnDestroy();
                     //}
+                }
+                if(rock != null)
+                {
+                    Vector3 dir = rock.transform.position - transform.position;
+                    transform.forward = dir.normalized;
+                    animator.SetTrigger("Trigger_Axe");
+
+                    rock.Damage(axingDamage);
                 }
 
                 // To do : 나무에 Hp를 만들거나 hitCount를 만들어서 Destory되도록
@@ -229,6 +243,9 @@ namespace AYO
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
                 currentHorizontalSpeed > targetSpeed + speedOffset)
             {
+                //중력작용?
+                //rigidbody.velocity = new Vector3(currentHorizontalSpeed, rigidbody.velocity.y, 0.0f);
+
                 // creates curved result rather than a linear one giving a more organic speed change
                 // note T in Lerp is clamped, so we don't need to clamp our speed
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
@@ -239,6 +256,9 @@ namespace AYO
             }
             else
             {
+                //중력작용?
+                //rigidbody.velocity = new Vector3(currentHorizontalSpeed, rigidbody.velocity.y, 0.0f);
+
                 speed = targetSpeed;
             }
 

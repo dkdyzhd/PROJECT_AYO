@@ -9,7 +9,7 @@ namespace AYO
     {
         None = 0,
         Tree = 1,
-        Stone = 2,
+        Rock = 2,
     }
 
     public class CollectableResource : MonoBehaviour

@@ -21,6 +21,7 @@ namespace AYO
                 Debug.Log("충돌");
                 interactables.Add(interactable);
 
+                //콜백
                 Ondected?.Invoke(interactable);
             }
         }
@@ -32,6 +33,7 @@ namespace AYO
                 Debug.Log("지나침");
                 interactables.Remove(interactable);
 
+                //콜백
                 OnLost?.Invoke(interactable);
             }
         }
