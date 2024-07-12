@@ -16,7 +16,7 @@ namespace AYO
 
         private void OnTriggerEnter(Collider other)
         {
-            if(other.transform.root.TryGetComponent(out IInteractable interactable))
+            if(other.transform.TryGetComponent(out IInteractable interactable))
             {
                 Debug.Log("충돌");
                 interactables.Add(interactable);
@@ -28,7 +28,7 @@ namespace AYO
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.transform.root.TryGetComponent(out IInteractable interactable))
+            if (other.transform.TryGetComponent(out IInteractable interactable))
             {
                 Debug.Log("지나침");
                 interactables.Remove(interactable);

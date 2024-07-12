@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c09e738389bd1b4994a8db0d58d2c3f, type: 3}
-  m_Name: Axe
+  m_Name: Knife
   m_EditorClassIdentifier: 
-  itemName: Axe
+  itemName: Knife
   type: 3
-  itemImage: {fileID: 21300000, guid: c13c7dbaeb056b943aa7fa78d4cbddd0, type: 3}
+  itemImage: {fileID: 21300000, guid: 8f507b80cedd3bc4eb57c3117ab9f539, type: 3}
   canStack: 0
   maxStackAmount: 0

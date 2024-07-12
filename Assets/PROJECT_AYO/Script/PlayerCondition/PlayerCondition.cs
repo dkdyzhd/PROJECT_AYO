@@ -54,6 +54,19 @@ namespace AYO
             Debug.Log("플레이어 사망");
         }
 
+        public void Heal(float amount)
+        {
+            health.Add(amount);
+        }
+
+        public void Eat(float amount)
+        {
+            health.Add(amount);
+            thirst.Add(amount);
+            hunger.Add(amount);
+        }
+
+
         public void OnTakePhysicalDamage()
         {
             

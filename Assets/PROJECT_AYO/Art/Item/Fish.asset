@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: Fish
   m_EditorClassIdentifier: 
   itemName: Fish
+  type: 2
   itemImage: {fileID: 21300000, guid: 228de84c863ba10438b1bdc8ba42110b, type: 3}
+  canStack: 1
+  maxStackAmount: 10

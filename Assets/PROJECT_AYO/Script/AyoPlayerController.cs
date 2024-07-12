@@ -55,7 +55,7 @@ namespace AYO
         private float animationBlend;
         private float targetRotation = 0.0f;
         private float rotationVelocity;
-        private float verticalVelocity;
+        public float verticalVelocity;
 
         private Vector2 look;
         private const float _threshold = 0.01f;
