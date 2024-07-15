@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace AYO
 {
@@ -9,6 +10,8 @@ namespace AYO
         public Condition health;
         public Condition thirst;
         public Condition hunger;
+
+        public UnityEvent onTakeDamage;
 
         public float noHungerHealthDecay;
         public float noThirstHealthDecay;
@@ -67,9 +70,10 @@ namespace AYO
         }
 
 
-        public void OnTakePhysicalDamage()
+        public void OnTakePhysicalDamage(int damageAmount)
         {
-            
+            health.Subtract(damageAmount);
+            onTakeDamage?.Invoke();
         }
 
         

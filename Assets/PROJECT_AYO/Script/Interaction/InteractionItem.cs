@@ -19,7 +19,11 @@ namespace AYO
             InteractionUI.Instance.RemoveInteractionData(this);
 
             // To do : Add Inventory
+            // var weaponItem = itemData as WeaponItem; //캐스팅
+
             InventoryUI.Instance.AddItem(itemData.itemName);
+            // InventoryUI.Instance.AddItem(itemData);
+
             // 파괴를 제일 나중
             Destroy(gameObject);
         }

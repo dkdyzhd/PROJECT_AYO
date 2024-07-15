@@ -8,9 +8,8 @@ namespace AYO
     {
         public System.Action<string> OnTakenAnimationEvent;
 
-        public void OnAnimationEvent(string eventName)
+        public void OnAnimationEvent(string eventName)  //애니메이터 기능 이름
         {
-            //if(eventName.Equals(""))
             OnTakenAnimationEvent?.Invoke(eventName);
         }
     }

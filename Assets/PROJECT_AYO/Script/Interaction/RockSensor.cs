@@ -33,7 +33,7 @@ namespace AYO
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform.root.TryGetComponent(out CollectableResource collectableResource))
+            if (other.transform.TryGetComponent(out CollectableResource collectableResource))
             {
                 if (collectableResource.ResourceType == CollectResourceType.Rock)   // Rock이 trigger로 들어왔다면
                 {
@@ -50,7 +50,7 @@ namespace AYO
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.transform.root.TryGetComponent(out CollectableResource collectableResource))
+            if (other.transform.TryGetComponent(out CollectableResource collectableResource))
             {
                 if (collectableResource.ResourceType == CollectResourceType.Rock)   // trigger에서 나가면 
                 {

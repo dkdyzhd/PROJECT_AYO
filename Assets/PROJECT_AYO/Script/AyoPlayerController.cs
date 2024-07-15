@@ -41,13 +41,13 @@ namespace AYO
         [Header("Inventory Bag")]
         public GameObject inventoryBag;
 
-        private Rigidbody rigidbody;
         private Animator animator;
         private CharacterController controller;
         private Camera mainCamera;
         private InteractionSensor interactionSensor;
         private TreeSensor treeSensor;
         private RockSensor rockSensor;
+        private AnimationEventListener animationEventListener;
 
         private bool isSprint = false;
         private Vector2 move;
@@ -67,17 +67,21 @@ namespace AYO
         private bool isInventoryBag = false;
         private bool isEnableMovement = true;
 
+        private bool isAxing = false;
+        private bool isPickAxing = false;
+
         //private bool isStrafe = false;
 
         private void Awake()
         {
-            rigidbody = GetComponent<Rigidbody>();
             animator = GetComponentInChildren<Animator>();
             controller = GetComponent<CharacterController>();
             mainCamera = Camera.main;
             interactionSensor = GetComponentInChildren<InteractionSensor>();
             treeSensor = GetComponentInChildren<TreeSensor>();
             rockSensor = GetComponentInChildren<RockSensor>();
+            animationEventListener = GetComponentInChildren<AnimationEventListener>();
+            animationEventListener.OnTakenAnimationEvent += OnTakenAnimationEvent;
         }
 
         private void Start()
@@ -151,11 +155,12 @@ namespace AYO
                 CollectableResource tree = treeSensor.GetClosedTree();
                 CollectableResource rock = rockSensor.GetClosedRock();
 
-                if (tree != null)
+                if (tree != null && !isAxing)
                 {
                     Vector3 dir = tree.transform.position - transform.position;
                     transform.forward = dir.normalized;
                     animator.SetTrigger("Trigger_Axe");
+                    isAxing = true;
 
                     tree.Damage(axingDamage);
 
@@ -298,6 +303,14 @@ namespace AYO
             if (lfAngle < -360f) lfAngle += 360f;
             if (lfAngle > 360f) lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
+        public void OnTakenAnimationEvent(string eventName)
+        {
+            if (eventName.Equals("Axe"))
+            {
+                isAxing = false;
+            }
         }
 
     }

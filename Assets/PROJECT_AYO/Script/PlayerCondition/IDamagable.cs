@@ -6,6 +6,6 @@ namespace AYO
 {
     public interface IDamagable
     {
-        public void OnTakePhysicalDamage();
+        public void OnTakePhysicalDamage(int damageAmount);
     }
 }
