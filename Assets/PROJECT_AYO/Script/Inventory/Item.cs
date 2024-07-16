@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AYO
 {
@@ -25,8 +26,10 @@ namespace AYO
     {
         [Header("Info")]
         public string itemName;
+        public string itemInfo;
         public ItemType type;
         public Sprite itemImage;
+        //public Image image;
 
         [Header("Stacking")]
         public bool canStack;
