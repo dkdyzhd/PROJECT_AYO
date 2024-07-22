@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace AYO
 {
@@ -26,7 +24,7 @@ namespace AYO
 
         //public List<Image> inventorySlots = new List<Image>();
         //test
-        public List<Item> items;
+        public List<ItemData> items;
         [SerializeField]
         public SlotUI[] slots;
        
@@ -99,8 +97,8 @@ namespace AYO
             }
 
         }
-       
-        public void AddItem(string itemName)
+        //public void AddItem(string itemName)
+        public void AddItem(ItemData itemdata)
         {
             //var targetItemData = GameDataManager.Instance.ItemDataList.Find(x => x.itemName.Equals(itemName));
             //Slot1.sprite = targetItemData.itemImage;
@@ -111,7 +109,8 @@ namespace AYO
             //}
 
             //To do : for문을 이용하여 아이템이 빈자리가 있으면 순서대로 담기도록
-            var targetItemData = GameDataManager.Instance.ItemDataList.Find(x => x.itemName.Equals(itemName));
+            //var targetItemData = GameDataManager.Instance.ItemDataList.Find(x => x.itemName.Equals(itemName));    //이름이 다름
+            var targetItemData = GameDataManager.Instance.ItemDataList.Find(x => x.Equals(itemdata));
             Debug.Log("ItemDataList에서 찾음");
             /*
             pickupCount++;

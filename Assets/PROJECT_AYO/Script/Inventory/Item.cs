@@ -1,39 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AYO
 {
-    public enum ItemType
+    public class Item : MonoBehaviour
     {
-        None = 0,
-        Resource = 1,
-        Consumable = 2,
-        Equip = 3,
+        [Header("Weapon/Equip")]
+        public ItemData axe;
+        public ItemData pickaxe;
+        public ItemData ak47;
+        public ItemData knife;
 
-    }
+        [Header("Resource")]
+        public ItemData tree;
+        public ItemData rock;
+        public ItemData iron;
 
-    public enum ConsumableType
-    {
-        None = 0,
-        Health = 1,
-        Thirst = 2,
-        Hunger = 3,
-        Variable = 4,
-    }
-
-    [CreateAssetMenu]
-    public class Item : ScriptableObject
-    {
-        [Header("Info")]
-        public string itemName;
-        public string itemInfo;
-        public ItemType type;
-        public Sprite itemImage;
-        //public Image image;
-
-        [Header("Stacking")]
-        public bool canStack;
-        public int maxStackAmount;
+        [Header("Add Condition")]
+        public ItemData water;
+        public ItemData syringe;
+        public ItemData fish;
     }
 }
-

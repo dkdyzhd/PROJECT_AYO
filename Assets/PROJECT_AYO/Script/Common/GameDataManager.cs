@@ -8,7 +8,7 @@ namespace AYO
     {
         public static GameDataManager Instance { get; private set; } = null;
 
-        public List<Item> ItemDataList = new List<Item>();
+        public List<ItemData> ItemDataList = new List<ItemData>();
 
         //콜백 수업
         public bool isGameOver;

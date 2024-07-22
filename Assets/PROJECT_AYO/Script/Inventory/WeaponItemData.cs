@@ -12,7 +12,7 @@ namespace AYO
     }
 
     [CreateAssetMenu]
-    public class WeaponItem : Item
+    public class WeaponItemData : ItemData
     {
         public WeaponType weaponType;
     }

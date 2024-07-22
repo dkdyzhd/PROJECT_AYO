@@ -12,7 +12,8 @@ namespace AYO
         public string Message => "Pick Up";
 
         //Item 스크립트를 활용하여 itemData 선언
-        public Item itemData;
+        public ItemData itemData;
+
 
         public void Interact()
         {
@@ -21,7 +22,8 @@ namespace AYO
             // To do : Add Inventory
             // var weaponItem = itemData as WeaponItem; //캐스팅
 
-            InventoryUI.Instance.AddItem(itemData.itemName);
+            InventoryUI.Instance.AddItem(itemData);
+            //InventoryUI.Instance.AddItem(itemData.itemName);
             // InventoryUI.Instance.AddItem(itemData);
 
             // 파괴를 제일 나중
