@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: AK47
   m_EditorClassIdentifier: 
   itemName: AK47
-  type: 3
+  itemInfo: 
+  itemType: 3
   itemImage: {fileID: 21300000, guid: 3a128eaef79b0c54aab9d7719bb42e2c, type: 3}
   canStack: 0
   maxStackAmount: 0

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Iron
   m_EditorClassIdentifier: 
   itemName: Iron
-  type: 1
+  itemInfo: 
+  itemType: 1
   itemImage: {fileID: 21300000, guid: dfe9d5461f3e9124b8f4975859dd30dd, type: 3}
   canStack: 1
   maxStackAmount: 50

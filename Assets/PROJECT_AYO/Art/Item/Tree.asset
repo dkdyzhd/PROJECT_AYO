@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Tree
   m_EditorClassIdentifier: 
   itemName: Tree
-  type: 1
+  itemInfo: 
+  itemType: 1
   itemImage: {fileID: 21300000, guid: 56890ed8e30552f40ac3ada5de7a43d3, type: 3}
   canStack: 1
   maxStackAmount: 50

@@ -29,6 +29,7 @@ namespace AYO
         public string itemInfo;
         public ItemType itemType;
         public Sprite itemImage;
+        public GameObject itemPrefab;
         //public Image image;
 
         [Header("Stacking")]

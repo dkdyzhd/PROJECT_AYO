@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Syringe
   m_EditorClassIdentifier: 
   itemName: Syringe
-  type: 2
+  itemInfo: 
+  itemType: 2
   itemImage: {fileID: 21300000, guid: 29b2f761e1b78834fb7cd24d36483d61, type: 3}
   canStack: 1
   maxStackAmount: 2

@@ -12,7 +12,7 @@ namespace AYO
         private int selectedSlot;   //선택된 퀵슬롯의 인덱스
         [SerializeField] private GameObject goSelectedImage;    //선택된 퀵슬롯 이미지
 
-        [SerializeField] private Holder holder;
+        [SerializeField] private GameObject holder;
 
         private void Start () 
         { 
@@ -22,14 +22,34 @@ namespace AYO
 
         private void Update ()
         {
-
+            TryInputNumber();
         }
 
         private void TryInputNumber()
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                
+                ChangeSlot(0);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                ChangeSlot(1);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                ChangeSlot(2);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                ChangeSlot(3);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                ChangeSlot(4);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                ChangeSlot(5);
             }
         }
 
@@ -42,6 +62,7 @@ namespace AYO
         private void SelectedSlot(int slotnum)
         {
             selectedSlot = slotnum; //선택된 슬롯
+            goSelectedImage.transform.position = quickSlots[selectedSlot].transform.position;
         }
 
         private void UseItem()
@@ -50,7 +71,25 @@ namespace AYO
             {
                 if (quickSlots[selectedSlot].item.itemType == ItemType.Weapon)
                 {
+                    var weaponData = quickSlots[selectedSlot].item as WeaponItemData;
+
                     //To do : Holder에 들게하기
+                    GameObject newWeapon = Instantiate(weaponData.itemPrefab);
+                    newWeapon.transform.parent = holder.transform;
+                    newWeapon.transform.localPosition = Vector3.zero;
+                    newWeapon.transform.localRotation = Quaternion.identity;
+                }
+                else if (quickSlots[selectedSlot].item.itemType == ItemType.Food)
+                {
+                    //To do : 맨손 & animation settrigger Eat
+                    if (holder.activeInHierarchy)
+                    {
+                        holder.SetActive(false);
+                    }
+                }
+                else
+                {
+                    //To do : 맨손 -> (Holder SetActive(false))
                 }
             }
             else

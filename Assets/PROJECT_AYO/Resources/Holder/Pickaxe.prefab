@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1946904223672819263}
   - component: {fileID: 8122056309408036901}
   - component: {fileID: 8258896492557508304}
+  - component: {fileID: -8433003731187808586}
   m_Layer: 0
   m_Name: Pickaxe
   m_TagString: Untagged
@@ -97,4 +98,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2c9f8c67636e441957df7da5c1626a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: fbe3d411bb5857f42a1c56fc5f6012de, type: 2}
+  itemData: {fileID: 11400000, guid: 26e3492dadde526468ac4375f9826e59, type: 2}
+--- !u!135 &-8433003731187808586
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8187721527447973755}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.31043202
+  m_Center: {x: 0.006800476, y: 0.001100188, z: 0.044377998}

@@ -295,7 +295,7 @@ namespace AYO
             // move the player
             // 유니티 자체의 캐릭터 컨트롤러를 이용- 콜라이더 기능이 탑재되어있음
             controller.Move(targetDirection.normalized * (speed * Time.deltaTime) +
-                             new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
+                             new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);   //verticalVelocity => 중력에 영향을 주는 변수
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
