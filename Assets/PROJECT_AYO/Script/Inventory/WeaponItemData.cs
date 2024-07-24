@@ -15,5 +15,6 @@ namespace AYO
     public class WeaponItemData : ItemData
     {
         public WeaponType weaponType;
+        public Vector3 rotation;
     }
 }

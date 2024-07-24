@@ -17,7 +17,15 @@ namespace AYO
         public float TargetFOV { get; set; } = 60.0f;
 
         public Cinemachine.CinemachineVirtualCamera tpsCamera;
-        public Cinemachine.CinemachineVirtualCamera fpsCamera;
+        //public Cinemachine.CinemachineVirtualCamera fpsCamera;
+        public Cinemachine.CinemachineImpulseSource impulseSource;
+
+        public void ShakeCamera(Vector3 velocity, float duration, float force)
+        {
+            impulseSource.m_DefaultVelocity = velocity;
+            impulseSource.m_ImpulseDefinition.m_ImpulseDuration = duration;
+            impulseSource.GenerateImpulseWithForce(force);
+        }
 
         public float zoomSpeed = 5.0f;
 
@@ -44,14 +52,14 @@ namespace AYO
             {
                 isTPSMode = !isTPSMode;
                 tpsCamera.gameObject.SetActive(isTPSMode);
-                fpsCamera.gameObject.SetActive(!isTPSMode);
+                //fpsCamera.gameObject.SetActive(!isTPSMode);
             }
         }
 
         private void LateUpdate()
         {
             tpsCamera.m_Lens.FieldOfView = Mathf.Lerp(tpsCamera.m_Lens.FieldOfView, TargetFOV, zoomSpeed * Time.deltaTime);
-            fpsCamera.transform.forward = fpsCamera.Follow.transform.forward;
+            //fpsCamera.transform.forward = fpsCamera.Follow.transform.forward;
         }
     }
 }

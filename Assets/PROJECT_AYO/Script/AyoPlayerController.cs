@@ -41,7 +41,8 @@ namespace AYO
         [Header("Inventory Bag")]
         public GameObject inventoryBag;
 
-        private Animator animator;
+        [HideInInspector]
+        public Animator animator;
         private CharacterController controller;
         private Camera mainCamera;
         private InteractionSensor interactionSensor;
@@ -62,6 +63,8 @@ namespace AYO
         private float cinemachineTargetYaw;
         private float cinemachineTargetPitch;
 
+        //public Cinemachine.CinemachineImpulseSource impulseSource;
+
         private float axingDamage = 20.0f;
 
         private bool isInventoryBag = false;
@@ -70,10 +73,15 @@ namespace AYO
         private bool isAxing = false;
         private bool isPickAxing = false;
 
+        //카메라쉐이크
+        public List<Vector3> recoilShakePattern = new List<Vector3>();
+        private int currentRecoilIndex = 0;
+
         //private bool isStrafe = false;
 
         private void Awake()
         {
+            Instance = this;
             animator = GetComponentInChildren<Animator>();
             controller = GetComponent<CharacterController>();
             mainCamera = Camera.main;
@@ -82,6 +90,11 @@ namespace AYO
             rockSensor = GetComponentInChildren<RockSensor>();
             animationEventListener = GetComponentInChildren<AnimationEventListener>();
             animationEventListener.OnTakenAnimationEvent += OnTakenAnimationEvent;
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
         }
 
         private void Start()
@@ -163,6 +176,15 @@ namespace AYO
                     isAxing = true;
 
                     tree.Damage(axingDamage);
+
+                    Vector3 velocity = recoilShakePattern[currentRecoilIndex];
+                    currentRecoilIndex++;
+                    if (currentRecoilIndex >= recoilShakePattern.Count)
+                    {
+                        currentRecoilIndex = currentRecoilIndex = 0;
+                    }
+
+                    CameraSystem.Instance.ShakeCamera(velocity,0.2f,1f);
 
                     //float currentHp = tree.resourceHp - axingDamage;
                     //tree.resourceHp = currentHp;
