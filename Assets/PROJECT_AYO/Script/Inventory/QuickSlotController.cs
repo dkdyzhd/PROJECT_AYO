@@ -1,31 +1,47 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AYO
 {
+    [System.Serializable]
+    public class QuickSlotData
+    {
+        public ItemData itemData;
+        public int count;
+    }
+
     public class QuickSlotController : MonoBehaviour
     {
-        [SerializeField] private SlotUI[] quickSlots;   //퀵슬롯6개
-        [SerializeField] private Transform quick_parent;    //퀵슬롯의 부모 오브젝트
+        public static QuickSlotController Instance { get; private set; } = null;
 
         private int selectedSlot;   //선택된 퀵슬롯의 인덱스
-        [SerializeField] private GameObject goSelectedImage;    //선택된 퀵슬롯 이미지
-
         [SerializeField] private GameObject holder;
 
         private WeaponItemData weaponData;
         private GameObject currentEquipWeapon = null;
         private WeaponItemData currentEquipWeaponData = null;
 
+        public List<QuickSlotData> quickSlotDatas = new List<QuickSlotData>();
 
-        private void Start () 
-        { 
-            quickSlots = quick_parent.GetComponentsInChildren<SlotUI>();
-            selectedSlot = 0;
+        private void Awake()
+        {
+            Instance = this;
         }
 
-        private void Update ()
+        private void OnDestroy()
+        {
+            Instance = null;
+        }
+
+        private void Start()
+        {
+            selectedSlot = 0;
+            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+        }
+
+        private void Update()
         {
             TryInputNumber();
         }
@@ -67,12 +83,9 @@ namespace AYO
         private void SelectedSlot(int slotnum)
         {
             selectedSlot = slotnum; //선택된 슬롯
-            goSelectedImage.transform.position = quickSlots[selectedSlot].transform.position;
+            InventoryUI.Instance.SelectItem(slotnum);
         }
-        private void ChangeWeaponItemData()
-        {
-            weaponData = quickSlots[selectedSlot].item as WeaponItemData;    //아이템데이터 검사 Weapon으로 바꿔주기
-        }
+
         private void OnHolder()
         {
             currentEquipWeaponData = weaponData;    //새로 받아온 데이터 입력
@@ -94,21 +107,35 @@ namespace AYO
             }
             currentEquipWeaponData = null;
         }
+
         private void Eat()
         {
             AyoPlayerController.Instance.animator.SetTrigger("Trigger_Eat");
+            quickSlotDatas[selectedSlot].itemData = null;
+
+            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
         }
 
         private void UseItem()
         {
-            if (quickSlots[selectedSlot].item != null)  //퀵슬롯에 아이템이 있다면
+            if (selectedSlot >= quickSlotDatas.Count)
+            {
+                if (currentEquipWeaponData != null) //현재 무기데이터가 있고
+                {
+                    RemoveWeapon();
+                }
+                return;
+            }
+
+            bool isExistItemData = quickSlotDatas[selectedSlot].itemData != null;
+            if (isExistItemData)  //퀵슬롯에 아이템이 있다면
             {
                 //아이템타입이 Weapon이라면
-                if (quickSlots[selectedSlot].item.itemType == ItemType.Weapon)  
+                if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Weapon)
                 {
-                    ChangeWeaponItemData();
                     if (currentEquipWeaponData != null) //현재 무기데이터가 있고
                     {
+                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
                         if (currentEquipWeaponData != weaponData)   //새로 받아온 무기아이템데이터와 같지 않고
                         {
                             RemoveWeapon();
@@ -123,11 +150,12 @@ namespace AYO
                     }
                     else    //현재 무기데이터가 없다면
                     {
+                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
                         OnHolder();
                     }
                 }
                 //아이템타입이 Food라면
-                else if (quickSlots[selectedSlot].item.itemType == ItemType.Food)
+                else if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Food)
                 {
                     //To do : 맨손 & animation settrigger Eat
                     RemoveWeapon();
@@ -138,6 +166,7 @@ namespace AYO
                 else
                 {
                     //To do : 맨손 -> (Holder SetActive(false))
+                    RemoveWeapon();
                 }
             }
             else
@@ -147,5 +176,21 @@ namespace AYO
             }
         }
 
+        public void AddItem(ItemData itemData)
+        {
+            for (int i = 0; i < quickSlotDatas.Count; i++)
+            {
+                if (quickSlotDatas[i].itemData == null)
+                {
+                    quickSlotDatas[i].itemData = itemData;
+                    InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+                    return;
+                }
+            }
+
+            var newQuickSlotData = new QuickSlotData() { itemData = itemData, count = 1, };
+            quickSlotDatas.Add(newQuickSlotData);
+            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+        }
     }
 }

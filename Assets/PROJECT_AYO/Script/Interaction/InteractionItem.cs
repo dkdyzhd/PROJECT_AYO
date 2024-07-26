@@ -22,9 +22,7 @@ namespace AYO
             // To do : Add Inventory
             // var weaponItem = itemData as WeaponItem; //캐스팅
 
-            InventoryUI.Instance.AddItem(itemData);
-            //InventoryUI.Instance.AddItem(itemData.itemName);
-            // InventoryUI.Instance.AddItem(itemData);
+            QuickSlotController.Instance.AddItem(itemData);
 
             // 파괴를 제일 나중
             Destroy(gameObject);
