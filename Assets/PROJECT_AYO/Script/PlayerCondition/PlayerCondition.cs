@@ -7,6 +7,8 @@ namespace AYO
 {
     public class PlayerCondition : MonoBehaviour, IDamagable
     {
+        public static PlayerCondition Instance = null;
+
         public Condition health;
         public Condition thirst;
         public Condition hunger;
@@ -15,6 +17,11 @@ namespace AYO
 
         public float noHungerHealthDecay;
         public float noThirstHealthDecay;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
@@ -45,6 +52,10 @@ namespace AYO
             health.valueText.text = health.ValueText();
             thirst.valueText.text = thirst.ValueText();
             hunger.valueText.text = hunger.ValueText();
+        }
+        private void OnDestroy()
+        {
+            Instance = null;
         }
 
         public void CurValueToInt()

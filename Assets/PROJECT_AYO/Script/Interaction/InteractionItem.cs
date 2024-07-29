@@ -25,7 +25,7 @@ namespace AYO
             QuickSlotController.Instance.AddItem(itemData);
 
             // 파괴를 제일 나중
-            Destroy(gameObject);
+            Destroy(transform.root.gameObject);
         }
 
     }

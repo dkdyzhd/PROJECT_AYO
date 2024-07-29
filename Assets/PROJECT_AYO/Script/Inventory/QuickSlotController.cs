@@ -18,6 +18,7 @@ namespace AYO
 
         private int selectedSlot;   //º±≈√µ» ƒ¸ΩΩ∑‘¿« ¿Œµ¶Ω∫
         [SerializeField] private GameObject holder;
+        public TMPro.TextMeshProUGUI countText;
 
         private WeaponItemData weaponData;
         private GameObject currentEquipWeapon = null;
@@ -113,6 +114,8 @@ namespace AYO
             AyoPlayerController.Instance.animator.SetTrigger("Trigger_Eat");
             quickSlotDatas[selectedSlot].itemData = null;
 
+            PlayerCondition.Instance.Eat(5);
+
             InventoryUI.Instance.RefreshSlot(quickSlotDatas);
         }
 
@@ -178,6 +181,15 @@ namespace AYO
 
         public void AddItem(ItemData itemData)
         {
+            if (itemData.canStack)
+            {
+                QuickSlotData quickSlotDataToStack = GetItemStack(itemData);
+                if(quickSlotDataToStack != null)
+                {
+                    quickSlotDataToStack.count++;
+                    return;
+                }
+            }
             for (int i = 0; i < quickSlotDatas.Count; i++)
             {
                 if (quickSlotDatas[i].itemData == null)
@@ -191,6 +203,18 @@ namespace AYO
             var newQuickSlotData = new QuickSlotData() { itemData = itemData, count = 1, };
             quickSlotDatas.Add(newQuickSlotData);
             InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+        }
+
+        QuickSlotData GetItemStack(ItemData itemData)
+        {
+            for(int i = 0;i < quickSlotDatas.Count; i++)
+            {
+                if (quickSlotDatas[i].itemData == itemData && quickSlotDatas[i].count < itemData.maxStackAmount)
+                {
+                    return quickSlotDatas[i];
+                }
+            }
+            return null;
         }
     }
 }

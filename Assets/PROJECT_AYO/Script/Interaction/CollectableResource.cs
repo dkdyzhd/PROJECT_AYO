@@ -34,6 +34,32 @@ namespace AYO
         public void Damage(float damage)
         {
             resourceHp -= damage;
+
+            switch(resourceType)
+            {
+                case CollectResourceType.Tree:
+                    {
+                        var prefab = PrefabManager.Instance.GetPrefab("TreeItem");
+                        var newDropItem = Instantiate(prefab);
+
+                        Vector2 randomCircle = UnityEngine.Random.insideUnitCircle;
+                        Vector3 dropPoint = transform.position + Vector3.up + new Vector3(randomCircle.x, 0, randomCircle.y);
+                        newDropItem.transform.position = dropPoint;
+                    }
+                    break;
+
+                case CollectResourceType.Rock:
+                    {
+                        var prefab = PrefabManager.Instance.GetPrefab("RockItem");
+                        var newDropItem = Instantiate(prefab);
+
+                        Vector2 randomCircle = UnityEngine.Random.insideUnitCircle;
+                        Vector3 dropPoint = transform.position + Vector3.up + new Vector3(randomCircle.x, 0, randomCircle.y);
+                        newDropItem.transform.position = dropPoint;
+                    }
+                    break;
+            }
+
             if (resourceHp <= 0)
             {
                 //if (OnResourceDestroy != null)
