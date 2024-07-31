@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AYO
 {
@@ -25,6 +26,7 @@ namespace AYO
         private WeaponItemData currentEquipWeaponData = null;
 
         public List<QuickSlotData> quickSlotDatas = new List<QuickSlotData>();
+        public QuickSlotData quickSlotDataToStack;
 
         private void Awake()
         {
@@ -117,6 +119,8 @@ namespace AYO
             PlayerCondition.Instance.Eat(5);
 
             InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+            quickSlotDataToStack.count--;
+            countText.text = CountText();   //수정예정
         }
 
         private void UseItem()
@@ -178,15 +182,20 @@ namespace AYO
                 RemoveWeapon();
             }
         }
+        public string CountText()   //countText를 문자열로 변환
+        {
+            return quickSlotDatas.Count.ToString();
+        }
 
         public void AddItem(ItemData itemData)
         {
             if (itemData.canStack)
             {
-                QuickSlotData quickSlotDataToStack = GetItemStack(itemData);
+                quickSlotDataToStack = GetItemStack(itemData);
                 if(quickSlotDataToStack != null)
                 {
                     quickSlotDataToStack.count++;
+                    countText.text = CountText();
                     return;
                 }
             }
