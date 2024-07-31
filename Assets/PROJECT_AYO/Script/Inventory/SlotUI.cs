@@ -21,17 +21,36 @@ namespace AYO
                 {
                     slotItemImage.sprite = Item.itemImage;
                     slotItemImage.color = new Color(1, 1, 1, 1);    //
+                    Count = 1;
                 }
                 else
                 {
                     slotItemImage.sprite = null;
                     slotItemImage.color = new Color(1, 1, 1, 0);    //
+                    countText.text = string.Empty;
                 }
 
             }
         }
+
+        public int Count
+        {
+            set
+            {
+                if(value > 1)
+                {
+                    countText.text = value.ToString();
+                }
+                else
+                {
+                    countText.text = string.Empty;
+                }
+            } 
+        }
+
         public Button button;
         public Image slotItemImage;
+        public TMPro.TextMeshProUGUI countText;
 
         public int index;
 

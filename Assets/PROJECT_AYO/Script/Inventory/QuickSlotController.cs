@@ -19,7 +19,6 @@ namespace AYO
 
         private int selectedSlot;   //선택된 퀵슬롯의 인덱스
         [SerializeField] private GameObject holder;
-        public TMPro.TextMeshProUGUI countText;
 
         private WeaponItemData weaponData;
         private GameObject currentEquipWeapon = null;
@@ -120,7 +119,9 @@ namespace AYO
 
             InventoryUI.Instance.RefreshSlot(quickSlotDatas);
             quickSlotDataToStack.count--;
-            countText.text = CountText();   //수정예정
+
+            InventoryUI.Instance.SetQuickSlotCount(SlotUI.Instance.index, quickSlotDataToStack.count);
+
         }
 
         private void UseItem()
@@ -182,20 +183,16 @@ namespace AYO
                 RemoveWeapon();
             }
         }
-        public string CountText()   //countText를 문자열로 변환
-        {
-            return quickSlotDatas.Count.ToString();
-        }
-
+       
         public void AddItem(ItemData itemData)
         {
-            if (itemData.canStack)
+            if (itemData.canStack)  //쌓을수 있는 아이템이라면
             {
                 quickSlotDataToStack = GetItemStack(itemData);
                 if(quickSlotDataToStack != null)
                 {
                     quickSlotDataToStack.count++;
-                    countText.text = CountText();
+                    InventoryUI.Instance.SetQuickSlotCount(SlotUI.Instance.index, quickSlotDataToStack.count);
                     return;
                 }
             }

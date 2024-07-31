@@ -15,7 +15,7 @@ namespace AYO
 
         [SerializeField] private GameObject goSelectedImage;    //¼±ÅÃµÈ Äü½½·Ô ÀÌ¹ÌÁö
         [SerializeField] public SlotUI[] slots;
-       
+
         //test
         [Header("Selected Item")]
         private SlotUI selectedItem;
@@ -80,6 +80,11 @@ namespace AYO
             //selectedItemName.text = selectedItem.Item.itemName;
 
             goSelectedImage.transform.position = slots[index].transform.position;
+        }
+
+        public void SetQuickSlotCount(int index, int count)
+        {
+            slots[index].Count = count;
         }
     }
 }
