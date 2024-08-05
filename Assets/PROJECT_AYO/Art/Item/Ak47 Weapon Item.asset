@@ -19,5 +19,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 1142016251943856, guid: eea5475b7b9012b45b34c4fb76ab7222, type: 3}
   canStack: 0
   maxStackAmount: 0
-  weaponType: 0
+  weaponType: 3
   rotation: {x: 0, y: 180, z: 90}

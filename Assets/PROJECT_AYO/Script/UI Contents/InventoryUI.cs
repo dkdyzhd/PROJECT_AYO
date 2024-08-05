@@ -63,6 +63,7 @@ namespace AYO
             for (; i < quickslotItems.Count && i < slots.Length; i++)
             {
                 slots[i].Item = quickslotItems[i].itemData;
+                slots[i].Count = quickslotItems[i].count;
             }
             for (; i < slots.Length; i++)
             {

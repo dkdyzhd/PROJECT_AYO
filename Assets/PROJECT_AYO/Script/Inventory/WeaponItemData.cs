@@ -9,6 +9,7 @@ namespace AYO
         None = 0,
         Axe = 1,
         PickAxe = 2,
+        Gun = 3,
     }
 
     [CreateAssetMenu]

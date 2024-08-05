@@ -52,7 +52,6 @@ namespace AYO
         public Image slotItemImage;
         public TMPro.TextMeshProUGUI countText;
 
-        public int index;
 
         private void Awake()
         {
@@ -70,7 +69,7 @@ namespace AYO
         }
         public void OnItemButtonClick()
         {
-            InventoryUI.Instance.SelectItem(index);
+            InventoryUI.Instance.SelectItem(QuickSlotController.Instance.selectedSlot);
         }
     }
 }

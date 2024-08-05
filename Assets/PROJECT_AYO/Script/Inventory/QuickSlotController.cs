@@ -17,7 +17,8 @@ namespace AYO
     {
         public static QuickSlotController Instance { get; private set; } = null;
 
-        private int selectedSlot;   //선택된 퀵슬롯의 인덱스
+        [HideInInspector]
+        public int selectedSlot;   //선택된 퀵슬롯의 인덱스
         [SerializeField] private GameObject holder;
 
         private WeaponItemData weaponData;
@@ -25,7 +26,6 @@ namespace AYO
         private WeaponItemData currentEquipWeaponData = null;
 
         public List<QuickSlotData> quickSlotDatas = new List<QuickSlotData>();
-        public QuickSlotData quickSlotDataToStack;
 
         private void Awake()
         {
@@ -110,23 +110,40 @@ namespace AYO
             currentEquipWeaponData = null;
         }
 
-        private void Eat()
+        private void Eat(QuickSlotData slotData)
         {
             AyoPlayerController.Instance.animator.SetTrigger("Trigger_Eat");
-            quickSlotDatas[selectedSlot].itemData = null;
-
             PlayerCondition.Instance.Eat(5);
 
-            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
-            quickSlotDataToStack.count--;
+            slotData.count--;
+            int index = quickSlotDatas.IndexOf(slotData);   //배열의 인덱스를 뽑아내는 함수
+            InventoryUI.Instance.SetQuickSlotCount(index, slotData.count);
+            if (slotData.count <= 0)
+            {
+                quickSlotDatas[selectedSlot].itemData = null;
+            }
 
-            InventoryUI.Instance.SetQuickSlotCount(SlotUI.Instance.index, quickSlotDataToStack.count);
+            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+        }
+
+        private void OnFPSMode()
+        {
+            weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
+            bool isFPSMode = weaponData.weaponType == WeaponType.Gun;
+            if (isFPSMode)
+            {
+                AyoPlayerController.Instance.animator.SetBool("isFPSMode", true);
+            }
+            else
+            {
+                AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
+            }
 
         }
 
         private void UseItem()
         {
-            if (selectedSlot >= quickSlotDatas.Count)
+            if (selectedSlot >= quickSlotDatas.Count)   //빈 퀵슬롯을 선택했을때
             {
                 if (currentEquipWeaponData != null) //현재 무기데이터가 있고
                 {
@@ -136,15 +153,20 @@ namespace AYO
             }
 
             bool isExistItemData = quickSlotDatas[selectedSlot].itemData != null;
+            bool isWeaponData = quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Weapon;
+            
             if (isExistItemData)  //퀵슬롯에 아이템이 있다면
             {
                 //아이템타입이 Weapon이라면
-                if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Weapon)
+                if (isWeaponData)
                 {
                     if (currentEquipWeaponData != null) //현재 무기데이터가 있고
                     {
-                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
-                        if (currentEquipWeaponData != weaponData)   //새로 받아온 무기아이템데이터와 같지 않고
+                        //weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
+                        //bool isFPSMode = weaponData.weaponType == WeaponType.Gun ;
+                        OnFPSMode();
+
+                        if (currentEquipWeaponData != weaponData)   //새로 받아온 무기아이템데이터와 같지 않다면
                         {
                             RemoveWeapon();
                             OnHolder();
@@ -158,49 +180,55 @@ namespace AYO
                     }
                     else    //현재 무기데이터가 없다면
                     {
-                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
+                        //weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
+                        OnFPSMode();
                         OnHolder();
                     }
                 }
                 //아이템타입이 Food라면
                 else if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Food)
                 {
+                    AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
                     //To do : 맨손 & animation settrigger Eat
                     RemoveWeapon();
                     //currentEquipWeaponData = null;
-                    Eat();
+                    Eat(quickSlotDatas[selectedSlot]);
 
                 }
                 else
                 {
                     //To do : 맨손 -> (Holder SetActive(false))
+                    AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
                     RemoveWeapon();
                 }
             }
             else
             {
                 //To do : 맨손
+                AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
                 RemoveWeapon();
             }
         }
-       
+
         public void AddItem(ItemData itemData)
         {
             if (itemData.canStack)  //쌓을수 있는 아이템이라면
             {
-                quickSlotDataToStack = GetItemStack(itemData);
-                if(quickSlotDataToStack != null)
+                int index = GetExistItemStackable(itemData, out QuickSlotData result);
+                if (result != null && index >= 0)
                 {
-                    quickSlotDataToStack.count++;
-                    InventoryUI.Instance.SetQuickSlotCount(SlotUI.Instance.index, quickSlotDataToStack.count);
+                    result.count++;                    
+                    InventoryUI.Instance.SetQuickSlotCount(index, result.count);
                     return;
                 }
             }
+
             for (int i = 0; i < quickSlotDatas.Count; i++)
             {
                 if (quickSlotDatas[i].itemData == null)
                 {
                     quickSlotDatas[i].itemData = itemData;
+                    quickSlotDatas[i].count = 1;
                     InventoryUI.Instance.RefreshSlot(quickSlotDatas);
                     return;
                 }
@@ -211,16 +239,19 @@ namespace AYO
             InventoryUI.Instance.RefreshSlot(quickSlotDatas);
         }
 
-        QuickSlotData GetItemStack(ItemData itemData)
+        private int GetExistItemStackable(ItemData itemData, out QuickSlotData resultData)
         {
-            for(int i = 0;i < quickSlotDatas.Count; i++)
+            for (int i = 0; i < quickSlotDatas.Count; i++)
             {
                 if (quickSlotDatas[i].itemData == itemData && quickSlotDatas[i].count < itemData.maxStackAmount)
                 {
-                    return quickSlotDatas[i];
+                    resultData = quickSlotDatas[i];
+                    return i;
                 }
             }
-            return null;
+
+            resultData = null;
+            return -1;
         }
     }
 }
