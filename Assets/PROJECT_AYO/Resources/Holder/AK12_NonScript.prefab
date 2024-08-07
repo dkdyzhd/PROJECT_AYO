@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4644705019848402}
   - component: {fileID: 33694420266534470}
   - component: {fileID: 23585202182350152}
+  - component: {fileID: 7276780976041469993}
   m_Layer: 0
   m_Name: AK12_NonScript
   m_TagString: Untagged
@@ -34,6 +35,7 @@ Transform:
   - {fileID: 4350995291533770}
   - {fileID: 4566670662885052}
   - {fileID: 4545726055606168}
+  - {fileID: 7204657873251130027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33694420266534470
@@ -86,6 +88,23 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7276780976041469993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142016251943856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 855cd8c937b49054fa2a6790efcfb7ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MuzzlePrefab: {fileID: 1182406914585020, guid: fdac2b543efe1164abc20e40e85905c2, type: 3}
+  bulletPrefab: {fileID: 8169951506285211121, guid: 79889446ca852174a8ae975a04b685fc, type: 3}
+  firePosition: {fileID: 7204657873251130027}
+  fireRate: 0.1
+  range: 100
 --- !u!1 &1504993768281492
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,3 +438,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5824487054610932762
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7204657873251130027}
+  m_Layer: 0
+  m_Name: FirePosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7204657873251130027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5824487054610932762}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4644705019848402}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -25,6 +25,7 @@ namespace AYO
         [Range(0.0f, 0.3f)] public float rotationSmoothTime = 0.12f;
 
         [Header("Weapon Holder")]
+        public GameObject weaponHolder;
 
         [Header("Weapon FOV")]
         //public float defaultFOV;
@@ -34,6 +35,14 @@ namespace AYO
         public float bottomClamp = -30.0f;
         public GameObject cinemachineCameraTarget;
         public float cameraAngleOverride = 0.0f;
+
+        [Header("Animation Rigging")]
+        public Transform aimTarget;
+        public LayerMask aimingLayer;
+        public UnityEngine.Animations.Rigging.Rig aimingRig; //풀네임 : 생략하고 싶으면 using에 UnityEngine.Animations.Rigging넣는다
+
+        public float aimingIKBlendCurrent;
+        public float aimingIKBlendTarget;
 
         // InventoryUI 함수에서 static 속성으로 Instance를 선언해놓았기 때문에 따로 안해도됨
         // [Header("Inventory")]
@@ -49,6 +58,7 @@ namespace AYO
         private TreeSensor treeSensor;
         private RockSensor rockSensor;
         private AnimationEventListener animationEventListener;
+        private Weapon currentWeapon;
 
         private bool isSprint = false;
         private Vector2 move;
@@ -90,6 +100,10 @@ namespace AYO
             rockSensor = GetComponentInChildren<RockSensor>();
             animationEventListener = GetComponentInChildren<AnimationEventListener>();
             animationEventListener.OnTakenAnimationEvent += OnTakenAnimationEvent;
+
+            //Gun
+            //var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
+            //currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
         }
 
         private void OnDestroy()
@@ -161,6 +175,24 @@ namespace AYO
                 
                 animator.SetTrigger("Trigger_ItemPick");
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
+            }
+
+            if (Input.GetKey(KeyCode.Mouse1))
+            {
+                //Gun
+                var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
+                currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
+
+                if (currentWeapon != null)
+                {
+                    currentWeapon.Shoot();
+                }
+                //위 코드와 같은 코드(최신버전에서 가능)
+                //currentWeapon?.Shoot(); 
+
+                var cameraForward = Camera.main.transform.forward.normalized;
+                cameraForward.y = 0;
+                transform.forward = cameraForward;
             }
 
             if (Input.GetMouseButtonDown(0))

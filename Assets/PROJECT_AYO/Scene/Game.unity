@@ -2646,6 +2646,37 @@ MonoBehaviour:
   button: {fileID: 597769410}
   slotItemImage: {fileID: 597769412}
   countText: {fileID: 514304071}
+--- !u!1 &546995313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 546995314}
+  m_Layer: 0
+  m_Name: AimTargetPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &546995314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546995313}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1452788250}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &575095590
 GameObject:
   m_ObjectHideFlags: 0
@@ -7477,7 +7508,7 @@ GameObject:
   - component: {fileID: 1452788251}
   - component: {fileID: 1452788255}
   - component: {fileID: 1452788256}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AYO.Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7502,6 +7533,7 @@ Transform:
   - {fileID: 303686046}
   - {fileID: 1957756854}
   - {fileID: 376705481}
+  - {fileID: 546995314}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1452788251
@@ -7522,10 +7554,18 @@ MonoBehaviour:
   cameraHorizontalSpeed: 2
   cameraVerticalSpeed: 2
   rotationSmoothTime: 0.12
+  weaponHolder: {fileID: 1313277905}
   topClamp: 70
   bottomClamp: -30
   cinemachineCameraTarget: {fileID: 582866477}
   cameraAngleOverride: 0
+  aimTarget: {fileID: 546995314}
+  aimingLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  aimingRig: {fileID: 0}
+  aimingIKBlendCurrent: 0
+  aimingIKBlendTarget: 0
   inventoryBag: {fileID: 1008595858}
   animator: {fileID: 0}
   verticalVelocity: -9.81
