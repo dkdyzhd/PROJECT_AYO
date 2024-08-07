@@ -91,6 +91,10 @@ namespace AYO
         private void OnHolder()
         {
             currentEquipWeaponData = weaponData;    //새로 받아온 데이터 입력
+            if (currentEquipWeaponData.weaponType == WeaponType.Gun)
+            {
+                ToggleFPSMode(true);
+            }
 
             //To do : Holder에 들게하기
             GameObject newWeapon = Instantiate(weaponData.itemPrefab);  //새로 받아온데이터의 itemPrefab 생성
@@ -107,6 +111,12 @@ namespace AYO
                 Destroy(currentEquipWeapon);    //무기 삭제
                 currentEquipWeapon = null;  //null값으로 만들기
             }
+
+            if (currentEquipWeaponData != null && currentEquipWeaponData.weaponType == WeaponType.Gun)
+            {
+                ToggleFPSMode(false);
+            }
+            
             currentEquipWeaponData = null;
         }
 
@@ -126,17 +136,18 @@ namespace AYO
             InventoryUI.Instance.RefreshSlot(quickSlotDatas);
         }
 
-        private void OnFPSMode()
+        private void ToggleFPSMode(bool isOn)
         {
-            weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
+            AyoPlayerController.Instance.animator.SetBool("isFPSMode", isOn);
+
+
             bool isFPSMode = weaponData.weaponType == WeaponType.Gun;
             if (isFPSMode)
             {
-                AyoPlayerController.Instance.animator.SetBool("isFPSMode", true);
             }
             else
             {
-                AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
+                AyoPlayerController.Instance.animator.SetBool("isFPSMode", isOn);
             }
 
         }
@@ -153,40 +164,34 @@ namespace AYO
             }
 
             bool isExistItemData = quickSlotDatas[selectedSlot].itemData != null;
-            bool isWeaponData = quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Weapon;
-            
+
             if (isExistItemData)  //퀵슬롯에 아이템이 있다면
             {
+                bool isWeaponData = quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Weapon;
                 //아이템타입이 Weapon이라면
                 if (isWeaponData)
                 {
                     if (currentEquipWeaponData != null) //현재 무기데이터가 있고
                     {
-                        //weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
-                        //bool isFPSMode = weaponData.weaponType == WeaponType.Gun ;
-                        OnFPSMode();
-
+                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
                         if (currentEquipWeaponData != weaponData)   //새로 받아온 무기아이템데이터와 같지 않다면
                         {
                             RemoveWeapon();
                             OnHolder();
                         }
-                        else    //새로 받아온 무기아이템데이터가 같다면
+                        else    //새로 받아온 무기아이템데이터가 같다면(다시 눌러서 무기 내리기)
                         {
                             RemoveWeapon(); //무기 내려놓기
-
-                            //currentEquipWeaponData = null;
                         }
                     }
                     else    //현재 무기데이터가 없다면
                     {
-                        //weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
-                        OnFPSMode();
+                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
                         OnHolder();
                     }
                 }
                 //아이템타입이 Food라면
-                else if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Food)
+                else if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Food && !isWeaponData)
                 {
                     AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
                     //To do : 맨손 & animation settrigger Eat
@@ -217,7 +222,7 @@ namespace AYO
                 int index = GetExistItemStackable(itemData, out QuickSlotData result);
                 if (result != null && index >= 0)
                 {
-                    result.count++;                    
+                    result.count++;
                     InventoryUI.Instance.SetQuickSlotCount(index, result.count);
                     return;
                 }

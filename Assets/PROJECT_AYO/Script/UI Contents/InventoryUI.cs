@@ -32,7 +32,7 @@ namespace AYO
 
         private void Awake()
         {
-            Instance = this;            
+            Instance = this;
         }
 
         private void Start()
@@ -47,7 +47,7 @@ namespace AYO
 
         public void OnInventory()
         {
-            if(inventoryUI.activeInHierarchy)
+            if (inventoryUI.activeInHierarchy)
             {
                 inventoryUI.SetActive(false);
             }
@@ -75,7 +75,7 @@ namespace AYO
         public void SelectItem(int index)
         {
             //if (slots[index] == null)
-                //return;
+            //return;
             //To do : 아이템을 클릭하면 아이템이름/이미지/정보 띄우기
             //selectedItem = slots[index];
             //selectedItemName.text = selectedItem.Item.itemName;

@@ -20,4 +20,4 @@ MonoBehaviour:
   canStack: 0
   maxStackAmount: 0
   weaponType: 3
-  rotation: {x: 0, y: 180, z: 90}
+  rotation: {x: 4.36, y: 79.877, z: 99.611}
