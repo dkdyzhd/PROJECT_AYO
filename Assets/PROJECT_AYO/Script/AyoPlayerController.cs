@@ -151,15 +151,15 @@ namespace AYO
 
 
             //player move
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
 
             move = new Vector2(horizontal, vertical);
 
-            //Mouse 이동에 따른 camera 움직임
-            float hMouse = Input.GetAxis("Mouse X");
-            float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
-            look = new Vector2(hMouse, vMouse);
+            //---Mouse 이동에 따른 camera 움직임
+            //float hMouse = Input.GetAxis("Mouse X");
+            //float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
+            //look = new Vector2(hMouse, vMouse);
 
             isSprint = Input.GetKey(KeyCode.LeftShift);
             Move();
