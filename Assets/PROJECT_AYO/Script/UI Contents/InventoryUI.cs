@@ -14,11 +14,11 @@ namespace AYO
         public GameObject inventoryUI;
 
         [SerializeField] private GameObject goSelectedImage;    //¼±ÅÃµÈ Äü½½·Ô ÀÌ¹ÌÁö
-        [SerializeField] public SlotUI[] slots;
+        [SerializeField] public QuickSlotUI[] slots;
 
         //test
         [Header("Selected Item")]
-        private SlotUI selectedItem;
+        private QuickSlotUI selectedItem;
         public TextMeshProUGUI selectedItemName;
 
         public int pickupCount = 0;
@@ -26,7 +26,7 @@ namespace AYO
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            slots = GetComponentsInChildren<SlotUI>();
+            slots = GetComponentsInChildren<QuickSlotUI>();
         }
 #endif
 

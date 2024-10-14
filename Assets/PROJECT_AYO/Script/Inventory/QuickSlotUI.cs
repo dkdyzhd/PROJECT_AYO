@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 namespace AYO
 {
-    public class SlotUI : MonoBehaviour
+    public class QuickSlotUI : MonoBehaviour
     {
-        public static SlotUI Instance { get; private set; } = null;
+        public static QuickSlotUI Instance { get; private set; } = null;
 
         [HideInInspector]
         private ItemData _item;
