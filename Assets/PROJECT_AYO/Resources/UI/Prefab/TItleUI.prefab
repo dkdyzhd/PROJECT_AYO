@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 5305919751535236403}
   - component: {fileID: 5931161239980726511}
   - component: {fileID: 4911860953315229496}
-  - component: {fileID: -7235031393618756321}
+  - component: {fileID: 7682319575183001040}
   m_Layer: 5
   m_Name: TItleUI
   m_TagString: Untagged
@@ -239,7 +239,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &-7235031393618756321
+--- !u!114 &7682319575183001040
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5726487561305356015}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 417ceaf66cd3a5445b29862d882bf0ec, type: 3}
+  m_Script: {fileID: 11500000, guid: 49a481e296cf07140aaad808adeeaa02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6096272022875215954
@@ -372,8 +372,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -7235031393618756321}
-        m_TargetAssemblyTypeName: SCU.TitleUI, Assembly-CSharp
+      - m_Target: {fileID: 7682319575183001040}
+        m_TargetAssemblyTypeName: AYO.TitleUI, Assembly-CSharp
         m_MethodName: OnClickExitButton
         m_Mode: 1
         m_Arguments:
@@ -505,8 +505,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -7235031393618756321}
-        m_TargetAssemblyTypeName: SCU.TitleUI, Assembly-CSharp
+      - m_Target: {fileID: 7682319575183001040}
+        m_TargetAssemblyTypeName: AYO.TitleUI, Assembly-CSharp
         m_MethodName: OnClickStartButton
         m_Mode: 1
         m_Arguments:
