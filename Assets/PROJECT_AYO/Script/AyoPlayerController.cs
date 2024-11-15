@@ -177,30 +177,32 @@ namespace AYO
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
             }
 
-            if (Input.GetKey(KeyCode.Mouse1))
+            if (Input.GetMouseButton(0))
             {
-                //Gun
-                var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
-                currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
-
-                if (currentWeapon != null)
+                if (QuickSlotController.Instance.isFPSMode)
                 {
-                    currentWeapon.Shoot();
+                    //Gun
+                    var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
+                    currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
+
+                    if (currentWeapon != null)
+                    {
+                        currentWeapon.Shoot();
+                    }
+
+                    //***위 코드와 같은 코드(최신버전에서 가능)***
+                    //currentWeapon?.Shoot(); 
+
+                    //***총을 쏠 때 앞을 보게하기 ***
+                    //var cameraForward = Camera.main.transform.forward.normalized;
+                    //cameraForward.y = 0;
+                    //transform.forward = cameraForward;
                 }
-                //위 코드와 같은 코드(최신버전에서 가능)
-                //currentWeapon?.Shoot(); 
 
-                var cameraForward = Camera.main.transform.forward.normalized;
-                cameraForward.y = 0;
-                transform.forward = cameraForward;
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
                 CollectableResource tree = treeSensor.GetClosedTree();
                 CollectableResource rock = rockSensor.GetClosedRock();
 
-                if (tree != null && !isAxing)
+                if (tree != null && !isAxing && QuickSlotController.Instance.isFPSMode == false)
                 {
                     Vector3 dir = tree.transform.position - transform.position;
                     transform.forward = dir.normalized;

@@ -27,6 +27,8 @@ namespace AYO
 
         public List<QuickSlotData> quickSlotDatas = new List<QuickSlotData>();
 
+        public bool isFPSMode = false;
+
         private void Awake()
         {
             Instance = this;
@@ -141,7 +143,8 @@ namespace AYO
             AyoPlayerController.Instance.animator.SetBool("isFPSMode", isOn);
 
 
-            bool isFPSMode = weaponData.weaponType == WeaponType.Gun;
+            //bool isFPSMode = weaponData.weaponType == WeaponType.Gun;
+            isFPSMode = weaponData.weaponType == WeaponType.Gun;
             if (isFPSMode)
             {
             }
