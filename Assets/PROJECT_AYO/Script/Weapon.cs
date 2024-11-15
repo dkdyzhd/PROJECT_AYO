@@ -37,7 +37,7 @@ namespace AYO
 
                 lastShootTime = Time.time;
 
-                //create bullet
+                //create Muzzle
                 var newMuzzle = Instantiate(MuzzlePrefab);
                 newMuzzle.transform.SetPositionAndRotation(firePosition.position, firePosition.rotation);
                 newMuzzle.gameObject.SetActive(true);
