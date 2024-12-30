@@ -14552,6 +14552,7 @@ GameObject:
   - component: {fileID: 3560079181925403513}
   - component: {fileID: 7983105479227350361}
   - component: {fileID: 6813723868615994873}
+  - component: {fileID: 7985390328474697564}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: FX
@@ -19444,9 +19445,22 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.15
+  m_Radius: 0.6
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7985390328474697564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8169951506285211121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db4b5135608199a4fa67026714a053d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 20

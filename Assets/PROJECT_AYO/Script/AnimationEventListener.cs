@@ -12,5 +12,15 @@ namespace AYO
         {
             OnTakenAnimationEvent?.Invoke(eventName);
         }
+
+        void EnableWeaponCollision()
+        {
+            QuickSlotController.Instance.EnableWeaponCollision();
+        }
+
+        void DisableWeaponCollision()
+        {
+            QuickSlotController.Instance.DisableWeaponCollision();
+        }
     }
 }

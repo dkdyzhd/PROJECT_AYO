@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Camera_Ctrl : MonoBehaviour
 {
+    public static Camera_Ctrl Instance { get; private set; } = null;
+
     public GameObject m_Player;
     Vector3 m_TargetPos = Vector3.zero;
 
@@ -39,9 +41,29 @@ public class Camera_Ctrl : MonoBehaviour
     private float zoomVelocity = 0.0f;               //줌 속도
     //--- 계산에 필요한 변수들...
 
+    //*** 카메라 쉐이킹 효과에 필요한 변수들
+    private float shakeDuration = 0f;   //쉐이킹 유지 시간
+    private float shakeIntensity = 0f;  //쉐이킹 강도
+    private Vector3 currentShakeOffset = Vector3.zero;  //현재 적용중인 흔들림 값
+    private Vector3 targetShakeOffset = Vector3.zero;   //목표 흔들림 값
+    private float shakeDampSpeed = 0.1f;    //흔들림 보간 속도(0.1초 기준)
+    //*** 카메라 쉐이킹 효과에 필요한 변수들
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void InitCamera(GameObject a_Player)
     {
         //m_Player = a_Player;
+    }
+
+    //외부에서 카메라 쉐이킹을 시작할 수 있는 함수
+    public void ShakeCamera(float intensity, float duration)
+    {
+        shakeDuration = duration;
+        shakeIntensity = intensity;
     }
 
     // Start is called before the first frame update
@@ -69,6 +91,11 @@ public class Camera_Ctrl : MonoBehaviour
         transform.position = m_BuffPos;  //<-- 카메라의 직각좌표계 기준의 위치
         transform.LookAt(m_TargetPos);
         //--- 카메라 위치 계산 공식 (구좌표계를 직각좌표계로 환산하는 부분)
+    }
+
+    private void OnDestroy()
+    {
+        Instance = null;
     }
 
     // Update is called once per frame
@@ -123,7 +150,26 @@ public class Camera_Ctrl : MonoBehaviour
 
         m_BuffPos = m_TargetPos + (m_CurrentRotation * m_BasicPos);
 
-        transform.position = m_BuffPos; //<--- 카메라의 직각 좌표계 기준의 위치
+        //***CameraShaking Logic : 한 번만 흔들림 & 부드러운 흔들림
+        if (shakeDuration > 0.0f)
+        {
+            //목표 흔들림 값을 랜덤으로 설정 (위아래로만)
+            targetShakeOffset = Vector3.up * (Random.Range(-1f,1f) * shakeIntensity);
+            shakeDuration -= Time.deltaTime;
+        }
+        else
+        {
+            //흔들림 종료시 목표를 원점으로 설정
+            targetShakeOffset = Vector3.zero;
+        }
+
+        //현재 흔들림 값을 목표 값으로 부드럽게 보간
+        currentShakeOffset = Vector3.Lerp(currentShakeOffset,targetShakeOffset, Time.deltaTime);    
+
+        //***CameraShaking Logic
+
+        //***쉐이킹을 적용한 최종 위치
+        transform.position = m_BuffPos + currentShakeOffset; //<--- 카메라의 직각 좌표계 기준의 위치
         transform.LookAt(m_TargetPos);
 
     }//void LateUpdate()

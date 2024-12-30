@@ -223,7 +223,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.9186824
+      - time: 0.43725228
+        functionName: EnableWeaponCollision
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: b81435603a32b2147a809d36e2a8b81c, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.8717118
+        functionName: DisableWeaponCollision
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: b81435603a32b2147a809d36e2a8b81c, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
         functionName: OnAnimationEvent
         data: Axe
         objectReferenceParameter: {fileID: 11500000, guid: 37e194aa684db4847aae7ffa075b013c, type: 3}

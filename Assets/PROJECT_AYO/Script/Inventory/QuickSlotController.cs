@@ -104,8 +104,40 @@ namespace AYO
             newWeapon.transform.localPosition = Vector3.zero;
             newWeapon.transform.localRotation = Quaternion.Euler(weaponData.rotation);
 
+            // 무기 충돌 활성화 설정
+            var weaponHandler = newWeapon.GetComponent<WeaponCollisionHandler>();
+            if(weaponHandler != null )
+            {
+                weaponHandler.enabled = false;  //기본적으로 비활성화 (공격중 충돌 활성화 할 것)
+            }
+
             currentEquipWeapon = newWeapon;
         }
+        
+        public void EnableWeaponCollision()
+        {
+            if (currentEquipWeapon != null)
+            {
+                var weaponHandler = currentEquipWeapon.GetComponent<WeaponCollisionHandler>();
+                if (weaponHandler != null)
+                {
+                    weaponHandler.enabled = true; // 충돌 활성화
+                }
+            }
+        }
+
+        public void DisableWeaponCollision()
+        {
+            if (currentEquipWeapon != null)
+            {
+                var weaponHandler = currentEquipWeapon.GetComponent<WeaponCollisionHandler>();
+                if (weaponHandler != null)
+                {
+                    weaponHandler.enabled = false; // 충돌 비활성화
+                }
+            }
+        }
+
         private void RemoveWeapon()
         {
             if (currentEquipWeapon != null)     //들고있는 무기가 있다면

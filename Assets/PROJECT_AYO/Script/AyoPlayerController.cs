@@ -84,8 +84,8 @@ namespace AYO
         private bool isPickAxing = false;
 
         //카메라쉐이크
-        public List<Vector3> recoilShakePattern = new List<Vector3>();
-        private int currentRecoilIndex = 0;
+        //public List<Vector3> recoilShakePattern = new List<Vector3>();
+        //private int currentRecoilIndex = 0;
 
         //private bool isStrafe = false;
 
@@ -177,6 +177,7 @@ namespace AYO
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
             }
 
+            //***Shooting***
             if (Input.GetMouseButton(0))
             {
                 if (QuickSlotController.Instance.isFPSMode)
@@ -198,27 +199,40 @@ namespace AYO
                     //cameraForward.y = 0;
                     //transform.forward = cameraForward;
                 }
+            }
 
+            //***자원캐기***
+            if (Input.GetMouseButtonDown(0))
+            {
                 CollectableResource tree = treeSensor.GetClosedTree();
                 CollectableResource rock = rockSensor.GetClosedRock();
 
-                if (tree != null && !isAxing && QuickSlotController.Instance.isFPSMode == false)
+                // ***Axing***
+                //if (tree != null && !isAxing && QuickSlotController.Instance.isFPSMode == false)
+                if (!isAxing && QuickSlotController.Instance.isFPSMode == false)
                 {
-                    Vector3 dir = tree.transform.position - transform.position;
-                    transform.forward = dir.normalized;
                     animator.SetTrigger("Trigger_Axe");
-                    isAxing = true;
-
-                    tree.Damage(axingDamage);
-
-                    Vector3 velocity = recoilShakePattern[currentRecoilIndex];
-                    currentRecoilIndex++;
-                    if (currentRecoilIndex >= recoilShakePattern.Count)
+                    if (tree != null)
                     {
-                        currentRecoilIndex = currentRecoilIndex = 0;
-                    }
+                        Vector3 dir = tree.transform.position - transform.position;
+                        transform.forward = dir.normalized;
+                        animator.SetTrigger("Trigger_Axe");
+                        isAxing = true;
 
-                    CameraSystem.Instance.ShakeCamera(velocity,0.2f,1f);
+                        tree.Damage(axingDamage);
+
+                        Camera_Ctrl.Instance.ShakeCamera(2f, 0.5f);   //강도 0.2, 지속 시간 1초
+                    }
+                    //***카메라 스크립트 변경으로 주석처리***
+                    //Vector3 velocity = recoilShakePattern[currentRecoilIndex];
+                    //currentRecoilIndex++;
+                    //if (currentRecoilIndex >= recoilShakePattern.Count)
+                    //{
+                    //    currentRecoilIndex = currentRecoilIndex = 0;
+                    //}
+
+                    //CameraSystem.Instance.ShakeCamera(velocity,0.2f,1f);
+                    //***카메라 스크립트 변경으로 주석처리***
 
                     //float currentHp = tree.resourceHp - axingDamage;
                     //tree.resourceHp = currentHp;
@@ -228,17 +242,25 @@ namespace AYO
                     //    CollectableResource.Instance.OnDestroy();
                     //}
                 }
-                if(rock != null)
+
+                //***PickAxing***
+                //if (rock != null && !isAxing && QuickSlotController.Instance.isFPSMode == false)
+                if (!isAxing && QuickSlotController.Instance.isFPSMode == false)
                 {
-                    Vector3 dir = rock.transform.position - transform.position;
-                    transform.forward = dir.normalized;
                     animator.SetTrigger("Trigger_Axe");
+                    if ((rock != null))
+                    {
+                        Vector3 dir = rock.transform.position - transform.position;
+                        transform.forward = dir.normalized;
+                        animator.SetTrigger("Trigger_Axe");
+                        isAxing = true;
 
-                    rock.Damage(axingDamage);
+                        rock.Damage(axingDamage);
+
+                        Camera_Ctrl.Instance.ShakeCamera(2f, 0.5f);   //강도 0.2, 지속 시간 1초
+                    }
                 }
-
-                // To do : 나무에 Hp를 만들거나 hitCount를 만들어서 Destory되도록
-                //To do : 무기에 따라서 모션 변경
+                //To do : 자원에 따라서 무기를 다르게
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
