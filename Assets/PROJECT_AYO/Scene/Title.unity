@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 841492124}
   - component: {fileID: 841492123}
   m_Layer: 5
-  m_Name: ConfigBox
+  m_Name: ConfigBoxUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

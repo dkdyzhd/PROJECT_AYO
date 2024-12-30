@@ -215,8 +215,8 @@ namespace AYO
         {
             dirVec = m_CacVec.normalized;   //계산용변수를 움직이는 변수에 대입
             dirVec.y = 0.0f;
-            //이동 > Patrol 상태일 때 보다 1.5배
-            rig.velocity = dirVec * speed * 1.5f;
+            //이동 > Patrol 상태일 때 보다 1.2배
+            rig.velocity = dirVec * speed * 1.2f;
 
             //플레이어 쪽으로 바라보도록
             transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace AYO
 {
@@ -19,8 +20,14 @@ namespace AYO
         public float speedChangeRate = 10.0f;
 
         [Header("Camera Setting")]
-        public float cameraHorizontalSpeed = 2.0f;
-        public float cameraVerticalSpeed = 2.0f;
+        //***CinemachineCamera 사용 안함으로 주석처리
+        //public float cameraHorizontalSpeed = 2.0f;
+        //public float cameraVerticalSpeed = 2.0f;
+
+        //***총사용 할 때 CameraSetting을 위한 변수
+        public Transform weaponTransform; // 총구 Transform
+        public LayerMask aimLayer; // 레이캐스트를 감지할 레이어 (지면, 벽 등)
+        public float aimRange = 100f;
 
         [Range(0.0f, 0.3f)] public float rotationSmoothTime = 0.12f;
 
@@ -31,10 +38,11 @@ namespace AYO
         //public float defaultFOV;
 
         [Header("Camera Clamping")]
-        public float topClamp = 70.0f;
-        public float bottomClamp = -30.0f;
-        public GameObject cinemachineCameraTarget;
-        public float cameraAngleOverride = 0.0f;
+        //***CinemachineCamera 사용 안함으로 주석처리
+        //public float topClamp = 70.0f;
+        //public float bottomClamp = -30.0f;
+        //public GameObject cinemachineCameraTarget;
+        //public float cameraAngleOverride = 0.0f;
 
         [Header("Animation Rigging")]
         public Transform aimTarget;
@@ -61,7 +69,8 @@ namespace AYO
         private Weapon currentWeapon;
 
         private bool isSprint = false;
-        private Vector2 move;
+        private Vector2 moveInput;
+        private Vector3 moveDirection;
         private float speed;
         private float animationBlend;
         private float targetRotation = 0.0f;
@@ -135,14 +144,10 @@ namespace AYO
 
         private void Update()
         {
-            //CameraSystem.Instance.TargetFOV = defaultFOV;
+            HandleMovement();
+            HandleAiming();
 
-            //레이캐스트
-            /*if (Input.GetMouseButtonDown(0))
-            {
-                Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
-            }*/
+            //CameraSystem.Instance.TargetFOV = defaultFOV;
 
             if (Input.GetKeyDown(KeyCode.Tab))  // Down으로 해야 한번으로 입력이 됨 > GetKey는 여러번 입력
             {
@@ -154,7 +159,7 @@ namespace AYO
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
-            move = new Vector2(horizontal, vertical);
+            moveInput = new Vector2(horizontal, vertical);
 
             //---Mouse 이동에 따른 camera 움직임
             //float hMouse = Input.GetAxis("Mouse X");
@@ -166,8 +171,8 @@ namespace AYO
 
             animator.SetFloat("Speed", animationBlend);
             //animator.SetFloat("Speed", isSprint ? 5.0f : 3.0f);
-            animator.SetFloat("Horizontal", move.x);
-            animator.SetFloat("Vertical", move.y);
+            animator.SetFloat("Horizontal", moveInput.x);
+            animator.SetFloat("Vertical", moveInput.y);
 
             if(Input.GetKeyDown(KeyCode.E))
             {
@@ -190,9 +195,9 @@ namespace AYO
                     {
                         currentWeapon.Shoot();
                     }
-
                     //***위 코드와 같은 코드(최신버전에서 가능)***
                     //currentWeapon?.Shoot(); 
+
 
                     //***총을 쏠 때 앞을 보게하기 ***
                     //var cameraForward = Camera.main.transform.forward.normalized;
@@ -273,34 +278,62 @@ namespace AYO
                 InteractionUI.Instance.SelectPrev();
             }
 
+        }//*** Update
+
+        private void HandleMovement()
+        {
+
         }
 
+        private void HandleAiming()
+        {
+            if(mainCamera == null || weaponTransform == null)
+                return;
+
+            //마우스 포인터에서 레이 발사
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            if(Physics.Raycast(ray, out RaycastHit hit, aimRange, aimLayer))
+            {
+                Vector3 targetPosition = hit.point;
+
+                // 총구 방향 조정
+                Vector3 aimDirection = targetPosition - weaponTransform.position;
+                aimDirection.y = 0;    //수평 방향만 회전
+                weaponTransform.rotation = Quaternion.LookRotation(aimDirection);
+
+                //캐릭터의 기본 회전은 움직임 방향에 맞추되, 조준 방향과 독립적
+                if(moveDirection != Vector3.zero)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * 10f);
+                }
+            }
+        }
         private void LateUpdate()
         {
-            CameraRotation();
+            //CameraRotation();
         }
 
+        //private void CameraRotation()
+        //{
+        //    // if there is an input and camera position is not fixed
+        //    if (look.sqrMagnitude >= _threshold)
+        //    {
+        //        //Don't multiply mouse input by Time.deltaTime;
+        //        float deltaTimeMultiplier = 1.0f;
 
-        private void CameraRotation()
-        {
-            // if there is an input and camera position is not fixed
-            if (look.sqrMagnitude >= _threshold)
-            {
-                //Don't multiply mouse input by Time.deltaTime;
-                float deltaTimeMultiplier = 1.0f;
+        //        cinemachineTargetYaw += look.x * deltaTimeMultiplier * cameraHorizontalSpeed;
+        //        cinemachineTargetPitch += look.y * deltaTimeMultiplier * cameraVerticalSpeed;
+        //    }
 
-                cinemachineTargetYaw += look.x * deltaTimeMultiplier * cameraHorizontalSpeed;
-                cinemachineTargetPitch += look.y * deltaTimeMultiplier * cameraVerticalSpeed;
-            }
+        //    // clamp our rotations so our values are limited 360 degrees
+        //    cinemachineTargetYaw = ClampAngle(cinemachineTargetYaw, float.MinValue, float.MaxValue);
+        //    cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, topClamp);
 
-            // clamp our rotations so our values are limited 360 degrees
-            cinemachineTargetYaw = ClampAngle(cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, topClamp);
-
-            // Cinemachine will follow this target
-            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
-                cinemachineTargetYaw, 0.0f);
-        }
+        //    // Cinemachine will follow this target
+        //    cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
+        //        cinemachineTargetYaw, 0.0f);
+        //}
 
         private void Move()
         {
@@ -314,13 +347,13 @@ namespace AYO
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
-            if (move == Vector2.zero) targetSpeed = 0.0f;
+            if (moveInput == Vector2.zero) targetSpeed = 0.0f;
 
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(controller.velocity.x, 0.0f, controller.velocity.z).magnitude;
 
             float speedOffset = 0.1f;
-            float inputMagnitude = move.magnitude;
+            float inputMagnitude = moveInput.magnitude;
 
             // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
@@ -349,13 +382,13 @@ namespace AYO
             if (animationBlend < 0.01f) animationBlend = 0f;
 
             // normalise input direction
-            Vector3 inputDirection = new Vector3(move.x, 0.0f, move.y).normalized;
+            moveDirection = new Vector3(moveInput.x, 0.0f, moveInput.y).normalized;
 
             // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is a move input rotate player when the player is moving
-            if (move != Vector2.zero)
+            if (moveInput != Vector2.zero)
             {
-                targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+                targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg +
                                   mainCamera.transform.eulerAngles.y;
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref rotationVelocity,
                     rotationSmoothTime);
