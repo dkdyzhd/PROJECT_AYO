@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4917635261055924}
   - component: {fileID: 33797841769961328}
   - component: {fileID: 23893270927162662}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LefFR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4733491059469462}
   - component: {fileID: 33786454063842710}
   - component: {fileID: 23067643150841808}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegBR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4576287683026538}
   - component: {fileID: 33179107772572722}
   - component: {fileID: 23304033491632198}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 4468867966484106}
   - component: {fileID: 33427342890162426}
   - component: {fileID: 23952273610194852}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegBL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 65449959130551738}
   - component: {fileID: 95598690723424096}
   - component: {fileID: 8334152934429331111}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dog
   m_TagString: Animal
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   - component: {fileID: 4509741363246936}
   - component: {fileID: 33747233342790134}
   - component: {fileID: 23301830546899968}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -551,7 +551,7 @@ GameObject:
   - component: {fileID: 4128711858190862}
   - component: {fileID: 33605522469980500}
   - component: {fileID: 23176804090855320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -634,7 +634,7 @@ GameObject:
   - component: {fileID: 4196279834041300}
   - component: {fileID: 33056165967462542}
   - component: {fileID: 23985926508392152}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -717,7 +717,7 @@ GameObject:
   - component: {fileID: 4555777018644352}
   - component: {fileID: 33858228369023828}
   - component: {fileID: 23490911278107360}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

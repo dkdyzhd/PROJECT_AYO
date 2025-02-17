@@ -7,6 +7,14 @@ public class Camera_Ctrl : MonoBehaviour
     public static Camera_Ctrl Instance { get; private set; } = null;
 
     public GameObject m_Player;
+
+    //---마우스 포인터 감지에 필요한 변수
+    public LayerMask aimLayer;                  //마우스 포인터가 감지할 레이어 설정
+    public float aimRange = 100f;               //레이캐스트 최대 거리
+    private Vector3 aimPoint = Vector3.zero;     //마우스 포인터 기준 충돌 지점
+    public Vector3 AimPoint => aimPoint;        //AimPoint를 외부에서 접근 가능하도록 공개
+    //--- 마우스 포인터 감지에 필요한 변수
+
     Vector3 m_TargetPos = Vector3.zero;
 
     //--- 카메라 위치 계산용 변수
@@ -107,15 +115,16 @@ public class Camera_Ctrl : MonoBehaviour
         m_TargetPos = m_Player.transform.position;
         m_TargetPos.y += 0.5f;
 
-        if (Input.GetMouseButton(1) == true) //마우스 우측 버튼을 누르고 있는 동안
-        {
-            //마우스를 좌우로 움직였을 때 값
-            m_RotH += Input.GetAxis("Mouse X") * hSpeed;
-            //마우스를 위아래로 움직였을 때 값
-            m_RotV -= Input.GetAxis("Mouse Y") * vSpeed;
+        //--- 카메라 회전
+        //if (Input.GetMouseButton(1) == true) //마우스 우측 버튼을 누르고 있는 동안
+        //{
+        //    //마우스를 좌우로 움직였을 때 값
+        //    m_RotH += Input.GetAxis("Mouse X") * hSpeed;
+        //    //마우스를 위아래로 움직였을 때 값
+        //    m_RotV -= Input.GetAxis("Mouse Y") * vSpeed;
 
-            m_RotV = ClampAngle(m_RotV, vMinLimit, vMaxLimit);
-        }//if(Input.GetMouseButton(1) == true) //마우스 우측 버튼을 누르고 있는 동안
+        //    m_RotV = ClampAngle(m_RotV, vMinLimit, vMaxLimit);
+        //}//if(Input.GetMouseButton(1) == true) //마우스 우측 버튼을 누르고 있는 동안
 
         //회전 부드럽게 보간 
         m_TargetRotation = Quaternion.Euler(m_RotV, m_RotH, 0.0f);
@@ -150,6 +159,8 @@ public class Camera_Ctrl : MonoBehaviour
 
         m_BuffPos = m_TargetPos + (m_CurrentRotation * m_BasicPos);
 
+        UpdateAimPoint();   //AimPoint 계산
+
         //***CameraShaking Logic : 한 번만 흔들림 & 부드러운 흔들림
         if (shakeDuration > 0.0f)
         {
@@ -173,6 +184,35 @@ public class Camera_Ctrl : MonoBehaviour
         transform.LookAt(m_TargetPos);
 
     }//void LateUpdate()
+
+    private void UpdateAimPoint()
+    {
+        //마우스 포인터 위치에서 레이 발사
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        // 지면과 교차점을 계산
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);  //y=0 평면 생성
+        if(groundPlane.Raycast(ray, out float distance))
+        {
+            aimPoint = ray.GetPoint(distance); //교차 지점을 aimPoint로 설정
+        }
+        else
+        {
+            aimPoint = Vector3.zero;    //교차점이 없을 경우 기본값 설정
+        }
+
+        // 이동중인 캐릭터의 위치를 기준으로 보정
+        if(m_Player != null)
+        {
+            Vector3 playerPosition = m_Player.transform.position;
+            aimPoint = new Vector3(aimPoint.x, playerPosition.y, aimPoint.z);   //캐릭터 높이로
+        }
+
+        //디버깅 : AimPoint 확인
+        Debug.DrawLine(ray.origin, aimPoint, Color.red);
+        //디버깅 : 캐릭터가 바라보는 방향 확인
+        Debug.DrawRay(transform.position, transform.forward * 5f, Color.green);
+    }
 
     float ClampAngle(float angle, float min, float max)
     {

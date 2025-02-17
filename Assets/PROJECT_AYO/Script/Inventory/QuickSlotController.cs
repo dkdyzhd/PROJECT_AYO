@@ -29,6 +29,8 @@ namespace AYO
 
         public bool isFPSMode = false;
 
+        public bool isDragging = false;
+
         private void Awake()
         {
             Instance = this;

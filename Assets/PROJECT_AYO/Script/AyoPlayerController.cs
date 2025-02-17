@@ -27,7 +27,9 @@ namespace AYO
         //***총사용 할 때 CameraSetting을 위한 변수
         public Transform weaponTransform; // 총구 Transform
         public LayerMask aimLayer; // 레이캐스트를 감지할 레이어 (지면, 벽 등)
-        public float aimRange = 100f;
+        
+        private bool isAiming = false;
+        private bool canAiming = false;
 
         [Range(0.0f, 0.3f)] public float rotationSmoothTime = 0.12f;
 
@@ -73,7 +75,8 @@ namespace AYO
         private Vector3 moveDirection;
         private float speed;
         private float animationBlend;
-        private float targetRotation = 0.0f;
+        private float moveTargetRotation = 0.0f;
+        private float aimTargetRotation = 0.0f;
         private float rotationVelocity;
         public float verticalVelocity;
 
@@ -144,16 +147,12 @@ namespace AYO
 
         private void Update()
         {
-            HandleMovement();
-            HandleAiming();
-
             //CameraSystem.Instance.TargetFOV = defaultFOV;
 
             if (Input.GetKeyDown(KeyCode.Tab))  // Down으로 해야 한번으로 입력이 됨 > GetKey는 여러번 입력
             {
-                InventoryUI.Instance.OnInventory();
+                InventoryUI.Instance.OnInventoryBag();
             }
-
 
             //player move
             float horizontal = Input.GetAxisRaw("Horizontal");
@@ -167,7 +166,8 @@ namespace AYO
             //look = new Vector2(hMouse, vMouse);
 
             isSprint = Input.GetKey(KeyCode.LeftShift);
-            Move();
+
+            MoveAndAiming();
 
             animator.SetFloat("Speed", animationBlend);
             //animator.SetFloat("Speed", isSprint ? 5.0f : 3.0f);
@@ -181,31 +181,25 @@ namespace AYO
                 animator.SetTrigger("Trigger_ItemPick");
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
             }
-
             //***Shooting***
-            if (Input.GetMouseButton(0))
+            if (QuickSlotController.Instance.isFPSMode) //Gun 
             {
-                if (QuickSlotController.Instance.isFPSMode)
+                var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
+                currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
+
+                if (currentWeapon != null && Input.GetMouseButton(0))
                 {
-                    //Gun
-                    var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
-                    currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
-
-                    if (currentWeapon != null)
-                    {
-                        currentWeapon.Shoot();
-                    }
-                    //***위 코드와 같은 코드(최신버전에서 가능)***
-                    //currentWeapon?.Shoot(); 
-
-
-                    //***총을 쏠 때 앞을 보게하기 ***
-                    //var cameraForward = Camera.main.transform.forward.normalized;
-                    //cameraForward.y = 0;
-                    //transform.forward = cameraForward;
+                    IsAiming();
+                    currentWeapon.Shoot();
                 }
-            }
+                //***위 코드와 같은 코드(최신버전에서 가능)***
+                //currentWeapon?.Shoot(); 
 
+                //*** 총을 쏠 때 앞을 보게하기 (FPS모드 일 때) ***
+                //var cameraForward = Camera.main.transform.forward.normalized;
+                //cameraForward.y = 0;
+                //transform.forward = cameraForward;
+            }
             //***자원캐기***
             if (Input.GetMouseButtonDown(0))
             {
@@ -216,7 +210,7 @@ namespace AYO
                 //if (tree != null && !isAxing && QuickSlotController.Instance.isFPSMode == false)
                 if (!isAxing && QuickSlotController.Instance.isFPSMode == false)
                 {
-                    animator.SetTrigger("Trigger_Axe");
+                    //animator.SetTrigger("Trigger_Axe");
                     if (tree != null)
                     {
                         Vector3 dir = tree.transform.position - transform.position;
@@ -247,12 +241,11 @@ namespace AYO
                     //    CollectableResource.Instance.OnDestroy();
                     //}
                 }
-
                 //***PickAxing***
                 //if (rock != null && !isAxing && QuickSlotController.Instance.isFPSMode == false)
                 if (!isAxing && QuickSlotController.Instance.isFPSMode == false)
                 {
-                    animator.SetTrigger("Trigger_Axe");
+                    //animator.SetTrigger("Trigger_Axe");
                     if ((rock != null))
                     {
                         Vector3 dir = rock.transform.position - transform.position;
@@ -265,7 +258,7 @@ namespace AYO
                         Camera_Ctrl.Instance.ShakeCamera(2f, 0.5f);   //강도 0.2, 지속 시간 1초
                     }
                 }
-                //To do : 자원에 따라서 무기를 다르게
+                //To do : 자원에 따라서 무기를 다르게 & 맞는 무기에만 데미지들어가게
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -279,39 +272,13 @@ namespace AYO
             }
 
         }//*** Update
-
-        private void HandleMovement()
-        {
-
-        }
-
-        private void HandleAiming()
-        {
-            if(mainCamera == null || weaponTransform == null)
-                return;
-
-            //마우스 포인터에서 레이 발사
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            if(Physics.Raycast(ray, out RaycastHit hit, aimRange, aimLayer))
-            {
-                Vector3 targetPosition = hit.point;
-
-                // 총구 방향 조정
-                Vector3 aimDirection = targetPosition - weaponTransform.position;
-                aimDirection.y = 0;    //수평 방향만 회전
-                weaponTransform.rotation = Quaternion.LookRotation(aimDirection);
-
-                //캐릭터의 기본 회전은 움직임 방향에 맞추되, 조준 방향과 독립적
-                if(moveDirection != Vector3.zero)
-                {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * 10f);
-                }
-            }
-        }
+        
         private void LateUpdate()
         {
             //CameraRotation();
+
+            // 정확한 Aiming을 위해 카메라와 캐릭터의 위치 및 회전 업데이트 타이밍이 일치하도록 조정
+            
         }
 
         //private void CameraRotation()
@@ -335,39 +302,37 @@ namespace AYO
         //        cinemachineTargetYaw, 0.0f);
         //}
 
-        private void Move()
+        private void MoveAndAiming()
         {
             //if (!isEnableMovement)
-                //return;
+            //return;
 
-            // set target speed based on move speed, sprint speed and if sprint is pressed
+            canAiming = QuickSlotController.Instance.isFPSMode;
+            isAiming = Input.GetMouseButton(1);
+            bool isMoving = moveInput != Vector2.zero;
+
+            // 목표 속도 설정 ( 스프린트 여부에 따라 )
             float targetSpeed = isSprint ? sprintSpeed : moveSpeed;
+            if (!isMoving) targetSpeed = 0.0f;
+            if (isAiming) targetSpeed *= 0.5f;  // 조준시 속도 감소
 
-            // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
-
-            // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is no input, set the target speed to 0
-            if (moveInput == Vector2.zero) targetSpeed = 0.0f;
-
-            // a reference to the players current horizontal velocity
+            // 현재 수평 속도 계산
             float currentHorizontalSpeed = new Vector3(controller.velocity.x, 0.0f, controller.velocity.z).magnitude;
 
+            // 가속 / 감속 처리
             float speedOffset = 0.1f;
             float inputMagnitude = moveInput.magnitude;
 
-            // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
                 currentHorizontalSpeed > targetSpeed + speedOffset)
             {
                 //중력작용?
                 //rigidbody.velocity = new Vector3(currentHorizontalSpeed, rigidbody.velocity.y, 0.0f);
 
-                // creates curved result rather than a linear one giving a more organic speed change
-                // note T in Lerp is clamped, so we don't need to clamp our speed
                 speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
                     Time.deltaTime * speedChangeRate);
 
-                // round speed to 3 decimal places
+                // 소수점 3자리로 반올림
                 speed = Mathf.Round(speed * 1000f) / 1000f;
             }
             else
@@ -381,32 +346,43 @@ namespace AYO
             animationBlend = Mathf.Lerp(animationBlend, targetSpeed, Time.deltaTime * speedChangeRate);
             if (animationBlend < 0.01f) animationBlend = 0f;
 
-            // normalise input direction
+            // 이동 방향 계산
             moveDirection = new Vector3(moveInput.x, 0.0f, moveInput.y).normalized;
 
+            // 회전 처리 : 에임 모드와 이동 모드 분리
+            if(canAiming && isAiming)
+            {   // 에임 모드
+                IsAiming();
+            }
             // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is a move input rotate player when the player is moving
-            if (moveInput != Vector2.zero)
-            {
-                targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg +
-                                  mainCamera.transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref rotationVelocity,
+            else if (isMoving)
+            {   // 이동 모드 : 카메라 방향 기준 캐릭터 회전
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, moveTargetRotation, ref rotationVelocity,
                     rotationSmoothTime);
-
-                //if (!isStrafe){}
-                
-                // rotate to face input direction relative to camera position
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-                
             }
 
-
-            Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
-
-            // move the player
+            // 이동 처리
+            moveTargetRotation = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg +
+                                  mainCamera.transform.eulerAngles.y;
+            Vector3 targetDirection = Quaternion.Euler(0.0f, moveTargetRotation, 0.0f) * Vector3.forward;
             // 유니티 자체의 캐릭터 컨트롤러를 이용- 콜라이더 기능이 탑재되어있음
             controller.Move(targetDirection.normalized * (speed * Time.deltaTime) +
                              new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);   //verticalVelocity => 중력에 영향을 주는 변수
+        }
+        public void IsAiming()
+        {
+            // 에임 모드 : 에임 포인트를 기준으로 캐릭터 회전 (카메라 컨트롤러에서 조준 지점 가져오기 )
+            Vector3 targetPosition = Camera_Ctrl.Instance.AimPoint;
+            Vector3 lookDirection = targetPosition - transform.position;
+            lookDirection.y = 0;    // 수평 방향만 고려
+
+            if (lookDirection.sqrMagnitude > 0.01f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 15f);
+            }
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

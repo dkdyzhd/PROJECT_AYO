@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4505603789550590}
   - component: {fileID: 33463680201471604}
   - component: {fileID: 23564165380623704}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegBl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4309524265304134}
   - component: {fileID: 33221178682886504}
   - component: {fileID: 23111796542770812}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4900123827302472}
   - component: {fileID: 33566708714377258}
   - component: {fileID: 23549456905184484}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 4061190438413172}
   - component: {fileID: 33202304238932788}
   - component: {fileID: 23387227972781764}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegFR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 4055214023568250}
   - component: {fileID: 33432539730944902}
   - component: {fileID: 23296839142733100}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegBR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 65306087575105876}
   - component: {fileID: 95995790678533120}
   - component: {fileID: 5767046307486466748}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lion
   m_TagString: Animal
   m_Icon: {fileID: 0}
@@ -550,7 +550,7 @@ GameObject:
   - component: {fileID: 4616931332331144}
   - component: {fileID: 33086916007251868}
   - component: {fileID: 23847536259612856}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 4709655614492276}
   - component: {fileID: 33626032047360422}
   - component: {fileID: 23082348511778442}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}

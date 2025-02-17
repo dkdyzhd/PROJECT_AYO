@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4490607014550770}
   - component: {fileID: 33538787159289248}
   - component: {fileID: 23630608590496984}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4504753180148958}
   - component: {fileID: 33398505773491412}
   - component: {fileID: 23562903228871022}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegBL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 4906869983789472}
   - component: {fileID: 33193766637966684}
   - component: {fileID: 23582233021638468}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 65079961972077558}
   - component: {fileID: 95039602943946200}
   - component: {fileID: 6196738043428361629}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cat
   m_TagString: Animal
   m_Icon: {fileID: 0}
@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 4253873267826562}
   - component: {fileID: 33497933368706898}
   - component: {fileID: 23457102070474430}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 4098250752286908}
   - component: {fileID: 33370319137296646}
   - component: {fileID: 23503771242018736}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegFR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +550,7 @@ GameObject:
   - component: {fileID: 4353219731003820}
   - component: {fileID: 33060496415450134}
   - component: {fileID: 23807166852102822}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LegBR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 4730180126519590}
   - component: {fileID: 33261100091505210}
   - component: {fileID: 23758923104966204}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
