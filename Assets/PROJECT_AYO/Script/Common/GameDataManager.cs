@@ -10,7 +10,7 @@ namespace AYO
 
         public List<ItemData> ItemDataList = new List<ItemData>();
 
-        //콜백 수업
+        //콜백 test
         public bool isGameOver;
 
         public CharacterBase playercharacter;

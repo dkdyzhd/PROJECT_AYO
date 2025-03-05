@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace AYO
 {
-    public class IconDrag_Ctrl : MonoBehaviour
+    public class CraftingUI : MonoBehaviour
     {
+        public CraftingManager craftingManager;
+
+
         // Start is called before the first frame update
         void Start()
         {

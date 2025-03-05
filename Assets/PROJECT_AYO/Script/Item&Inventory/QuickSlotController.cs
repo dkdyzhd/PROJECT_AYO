@@ -27,6 +27,25 @@ namespace AYO
 
         public List<QuickSlotData> quickSlotDatas = new List<QuickSlotData>();
 
+        //아이템과 충분한 양이 있는지 확인하기 위함
+        public Dictionary<ItemData, int> quickSlotItems = new Dictionary<ItemData, int>();
+        public bool HasItem(ItemData item, int quantity)
+        {
+            return quickSlotItems.ContainsKey(item) && quickSlotItems[item] >= quantity;
+        }
+
+        public void RemoveItem(ItemData item, int quantity)
+        {
+            if(HasItem(item, quantity))
+            {
+                quickSlotItems[item] -= quantity;
+                if (quickSlotItems[item] <= 0)
+                {
+                    quickSlotItems.Remove(item);
+                }
+            }
+        }
+
         public bool isFPSMode = false;
 
         public bool isDragging = false;

@@ -14,7 +14,7 @@ namespace AYO
         [System.Serializable]
         public struct Ingredient
         {
-            public Item item;   //재료가 되는 아이템
+            public ItemData item;   //재료가 되는 아이템
             public int quantity;    //필요한 개수
         }
 

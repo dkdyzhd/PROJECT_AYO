@@ -9,6 +9,7 @@ namespace AYO
         Resource = 1,
         Food = 2,
         Weapon = 3,
+        Heal = 4,
 
     }
 

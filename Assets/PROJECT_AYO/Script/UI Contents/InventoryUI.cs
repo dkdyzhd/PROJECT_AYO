@@ -12,7 +12,7 @@ namespace AYO
         public static InventoryUI Instance { get; private set; } = null;
 
         public GameObject quickSlotUI;
-        public GameObject inventoryBagUI;
+        public GameObject CraftingUI;
 
         [SerializeField] private GameObject goSelectedImage;    //선택된 퀵슬롯 이미지
         [SerializeField] public QuickSlotUI[] slots;
@@ -38,7 +38,7 @@ namespace AYO
 
         private void Start()
         {
-            inventoryBagUI.SetActive(false);   // 처음에는 인벤토리Bag off
+            CraftingUI.SetActive(false);   // 처음에는 CraftingUI off
         }
 
         private void OnDestroy()
@@ -48,13 +48,13 @@ namespace AYO
 
         public void OnInventoryBag()
         {
-            if (inventoryBagUI.activeInHierarchy)
+            if (CraftingUI.activeInHierarchy)
             {
-                inventoryBagUI.SetActive(false);
+                CraftingUI.SetActive(false);
             }
             else
             {
-                inventoryBagUI.SetActive(true);
+                CraftingUI.SetActive(true);
             }
         }
 
