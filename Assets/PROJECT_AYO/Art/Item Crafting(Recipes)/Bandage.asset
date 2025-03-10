@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb98181a0cdc68446999fc001b33b64f, type: 3}
-  m_Name: Shelter
+  m_Name: Bandage
   m_EditorClassIdentifier: 
-  outputItem: {fileID: 11400000, guid: 462f63eaaa26ca446b4c139c080a1c0e, type: 2}
+  outputItem: {fileID: 11400000, guid: 319d8e3f87a7434489d600f2e8a56015, type: 2}
   outputQuantity: 1
-  ingredients: []
+  ingredients:
+  - item: {fileID: 11400000, guid: 66abfdab1c1f4504e89af74dd1c2677b, type: 2}
+    quantity: 1

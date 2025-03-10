@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb98181a0cdc68446999fc001b33b64f, type: 3}
-  m_Name: PickAxe
+  m_Name: Shelter
   m_EditorClassIdentifier: 
-  outputItem: {fileID: 11400000, guid: fbe3d411bb5857f42a1c56fc5f6012de, type: 2}
+  outputItem: {fileID: 11400000, guid: 462f63eaaa26ca446b4c139c080a1c0e, type: 2}
   outputQuantity: 1
-  ingredients: []
+  ingredients:
+  - item: {fileID: 11400000, guid: 66abfdab1c1f4504e89af74dd1c2677b, type: 2}
+    quantity: 1
+  - item: {fileID: 11400000, guid: be3befec89fd97f4fad3a86ed177e7cd, type: 2}
+    quantity: 1

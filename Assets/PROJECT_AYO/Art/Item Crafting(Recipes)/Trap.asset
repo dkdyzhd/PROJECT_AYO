@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb98181a0cdc68446999fc001b33b64f, type: 3}
-  m_Name: Torch
+  m_Name: Trap
   m_EditorClassIdentifier: 
-  outputItem: {fileID: 11400000, guid: b287a44f9d42b004180f4acf2e9c46f2, type: 2}
+  outputItem: {fileID: 11400000, guid: f534099c8fc3f4d4980f68bcf58b52a0, type: 2}
   outputQuantity: 1
-  ingredients: []
+  ingredients:
+  - item: {fileID: 11400000, guid: 66abfdab1c1f4504e89af74dd1c2677b, type: 2}
+    quantity: 1
