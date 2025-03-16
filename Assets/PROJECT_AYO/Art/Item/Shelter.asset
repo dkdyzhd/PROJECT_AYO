@@ -16,6 +16,6 @@ MonoBehaviour:
   itemInfo: 
   itemType: 0
   itemImage: {fileID: 0}
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 4127458443936199739, guid: 9b5216c425ffc724182f41348f4633d9, type: 3}
   canStack: 0
   maxStackAmount: 0

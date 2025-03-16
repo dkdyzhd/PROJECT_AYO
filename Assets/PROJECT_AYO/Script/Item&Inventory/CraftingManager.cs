@@ -75,7 +75,7 @@ namespace AYO
             {
                 // 재료 차감
                 // quickSlotController.RemoveItem(ingredient.item, ingredient.quantity);
-                Debug.Log("재료 차감!");
+                Debug.Log("제작 가능!");
             }
             return true;
         }
@@ -84,6 +84,11 @@ namespace AYO
         public void TestCraftItem(RecipeData recipe)
         {
             // 퀵슬롯에 제작결과물 추가
+            foreach (var ingredient in recipe.ingredients)
+            {
+                quickSlotController.RemoveItem(ingredient.item, ingredient.quantity);
+                Debug.Log($"재료 차감 {ingredient.item}, {ingredient.quantity}개");
+            }
             quickSlotController.AddItem(recipe.outputItem);
             Debug.Log($"제작완료 {recipe.outputItem.itemName}");
         }

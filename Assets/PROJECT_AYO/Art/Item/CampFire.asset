@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c09e738389bd1b4994a8db0d58d2c3f, type: 3}
-  m_Name: BonFire
+  m_Name: CampFire
   m_EditorClassIdentifier: 
-  itemName: Bonfire
+  itemName: Campfire
   itemInfo: 
   itemType: 0
   itemImage: {fileID: 0}
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 501295248943222296, guid: 88485a242a123a441b6e06fb977e2f59, type: 3}
   canStack: 0
   maxStackAmount: 0

@@ -52,32 +52,43 @@ namespace AYO
             //return quickSlotItems.ContainsKey(item) && quickSlotItems[item] >= quantity;
         }
 
-        //public void RemoveItem(ItemData item, int quantity)
+        public void RemoveItem(ItemData item, int quantity)
+        {
+            int index = GetExistItemStackable(item, out QuickSlotData result);
+            int slotIndex = quickSlotDatas.IndexOf(result);   //배열의 인덱스를 뽑아내는 함수
+            if (result != null && index > 0)
+            {
+                result.count -= quantity;
+                if(result.count <= 0)
+                {// 다쓰면 아이템데이터가 퀵슬롯에서 없어지도록
+                    quickSlotDatas[slotIndex].itemData = null;
+                }
+            }
+
+            // Dictionary에서도 차감
+            quickSlotItems[item] -= quantity;
+            if (quickSlotItems[item] <= 0)
+            {
+                quickSlotItems.Remove(item);
+            }
+
+            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+        }
+        //public void RemoveItem(QuickSlotData item, int quantity)
         //{
-        //    if(HasItem(item, quantity))
+        //    item.count -= quantity;
+        //    if (item.count <= 0)
         //    {
-        //        quickSlotItems[item] -= quantity;
-        //        if (quickSlotItems[item] <= 0)
+        //        //Remove(item);
+        //        //퀵슬롯.데이
+        //        if (item.count <= 0)
         //        {
-        //            quickSlotItems.Remove(item);
+        //            item.itemData = null;
         //        }
+
+        //        InventoryUI.Instance.RefreshSlot(quickSlotDatas);
         //    }
         //}
-        public void RemoveItem(QuickSlotData item, int quantity)
-        {
-            item.count -= quantity;
-            if (item.count <= 0)
-            {
-                //Remove(item);
-                //퀵슬롯.데이
-                if (item.count <= 0)
-                {
-                    item.itemData = null;
-                }
-
-                InventoryUI.Instance.RefreshSlot(quickSlotDatas);
-            }
-        }
 
         public bool isFPSMode = false;
 
