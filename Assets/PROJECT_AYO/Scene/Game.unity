@@ -1383,6 +1383,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9ca17b74aeea3d64589879da9632b11b, type: 2}
   - {fileID: 11400000, guid: c1e7ad7640fc57d4dad0bbf26c2736a7, type: 2}
   craftingUI: {fileID: 6532711446117216570}
+  itemListParent: {fileID: 6532711446117216569}
+  itemButtonPrefab: {fileID: 4809638556129686729, guid: c12591c7c886bf34f99b09d62c8eb3ac, type: 3}
+  testCanCraftItem: 0
 --- !u!4 &357774796
 Transform:
   m_ObjectHideFlags: 0

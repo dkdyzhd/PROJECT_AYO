@@ -115,6 +115,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftingManager: {fileID: 0}
   quickSlotController: {fileID: 0}
-  itemListParent: {fileID: 5290347489945837948}
-  itemButtonPrefab: {fileID: 0}
-  availableRecipes: []
