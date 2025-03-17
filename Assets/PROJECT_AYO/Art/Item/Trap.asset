@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Trap
   itemInfo: 
-  itemType: 0
+  itemType: 5
   itemImage: {fileID: 0}
   itemPrefab: {fileID: 0}
   canStack: 0

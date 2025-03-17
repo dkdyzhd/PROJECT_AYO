@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Campfire
   itemInfo: 
-  itemType: 0
+  itemType: 5
   itemImage: {fileID: 0}
   itemPrefab: {fileID: 501295248943222296, guid: 88485a242a123a441b6e06fb977e2f59, type: 3}
   canStack: 0

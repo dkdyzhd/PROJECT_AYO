@@ -27,10 +27,6 @@ namespace AYO
 
         public List<QuickSlotData> quickSlotDatas = new List<QuickSlotData>();
 
-        // 퀵슬롯데이터로 아이템데이터가 들어가는지 확인
-        //private QuickSlotData quickSlotData;
-        //public Dictionary<QuickSlotData, int> testQuickSlotItems = new Dictionary<QuickSlotData, int>();
-
         //아이템과 충분한 양이 있는지 확인하기 위함
         public Dictionary<ItemData, int> quickSlotItems = new Dictionary<ItemData, int>();
         public bool HasItem(ItemData item, int quantity)
