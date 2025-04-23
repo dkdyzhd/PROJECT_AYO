@@ -199,6 +199,7 @@ namespace AYO
             }
         }
 
+        // ------------------------- 퀵슬롯 사용 -------------------------------------------------------
         private void RemoveWeapon()
         {
             if (currentEquipWeapon != null)     //들고있는 무기가 있다면
@@ -311,6 +312,8 @@ namespace AYO
             }
         }
 
+
+        // ------------------------ 아이템 획득한 후 인벤토리에 추가되는 로직 -----------------------------
         public void AddItem(ItemData itemData)
         {
             if (itemData.canStack)  //쌓을수 있는 아이템이라면
@@ -333,7 +336,7 @@ namespace AYO
                     return;
                 }
             }
-
+            Debug.Log($"현재 퀵 슬롯 칸 수 : {quickSlotDatas.Count}");
             // 순회하며 빈 슬롯 찾기
             for (int i = 0; i < quickSlotDatas.Count; i++)
             {   // 빈 슬롯 찾으면 새 아이템 추가
