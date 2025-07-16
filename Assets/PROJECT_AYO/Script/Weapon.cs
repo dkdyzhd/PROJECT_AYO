@@ -45,8 +45,10 @@ namespace AYO
 
                 // Create Bullet
                 var newBullet = Instantiate(bulletPrefab);
+                newBullet.transform.position = transform.position;
+                newBullet.transform.forward = transform.forward;    // 총알을 무기의 방향으로 나가도록 설정 => 수정 예정(방향 설정 = 플레이어-> 마우스포인터 방향으로)
                 //총에서 총알이 나가는 것으로 변경(카메라 -> 총구)
-                newBullet.transform.SetPositionAndRotation(firePosition.position, firePosition.rotation);
+                // newBullet.transform.SetPositionAndRotation(firePosition.position, firePosition.rotation);
                 newBullet.gameObject.SetActive(true);
 
                 //두 오브젝트가 서로 충돌처리가 되지 않게 Unity Physics Engine에게 무시하도록 지시

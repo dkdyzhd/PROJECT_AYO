@@ -7,6 +7,7 @@ public class Camera_Ctrl : MonoBehaviour
     public static Camera_Ctrl Instance { get; private set; } = null;
 
     public GameObject m_Player;
+    public Transform raycastHitTest;
 
     //---마우스 포인터 감지에 필요한 변수
     public LayerMask aimLayer;                  //마우스 포인터가 감지할 레이어 설정
@@ -190,9 +191,15 @@ public class Camera_Ctrl : MonoBehaviour
         //마우스 포인터 위치에서 레이 발사
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        //if(Physics.Raycast(ray, out RaycastHit hit))
+        //{
+        //    Debug.Log(hit.point);
+        //    raycastHitTest.position = hit.point;
+        //}
+
         // 지면과 교차점을 계산
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);  //y=0 평면 생성
-        if(groundPlane.Raycast(ray, out float distance))
+        if (groundPlane.Raycast(ray, out float distance))
         {
             aimPoint = ray.GetPoint(distance); //교차 지점을 aimPoint로 설정
         }
@@ -202,16 +209,19 @@ public class Camera_Ctrl : MonoBehaviour
         }
 
         // 이동중인 캐릭터의 위치를 기준으로 보정
-        if(m_Player != null)
+        if (m_Player != null)
         {
             Vector3 playerPosition = m_Player.transform.position;
             aimPoint = new Vector3(aimPoint.x, playerPosition.y, aimPoint.z);   //캐릭터 높이로
+
+            Debug.Log(aimPoint);
+            raycastHitTest.position = aimPoint;
         }
 
-        //디버깅 : AimPoint 확인
-        Debug.DrawLine(ray.origin, aimPoint, Color.red);
-        //디버깅 : 캐릭터가 바라보는 방향 확인
-        Debug.DrawRay(transform.position, transform.forward * 5f, Color.green);
+        ////디버깅 : AimPoint 확인
+        //Debug.DrawLine(ray.origin, aimPoint, Color.red);
+        ////디버깅 : 캐릭터가 바라보는 방향 확인
+        //Debug.DrawRay(transform.position, transform.forward * 5f, Color.green);
     }
 
     float ClampAngle(float angle, float min, float max)
