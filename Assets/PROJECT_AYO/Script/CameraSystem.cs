@@ -58,8 +58,28 @@ namespace AYO
 
         private void LateUpdate()
         {
+            UpdateAimPoint();
+
             tpsCamera.m_Lens.FieldOfView = Mathf.Lerp(tpsCamera.m_Lens.FieldOfView, TargetFOV, zoomSpeed * Time.deltaTime);
             //fpsCamera.transform.forward = fpsCamera.Follow.transform.forward;
+        }
+        public Vector3 AimPoint { get; private set; }
+
+        private void UpdateAimPoint()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask("Ground", "Default")))
+            {
+                AimPoint = hit.point;
+
+                // 디버그 시 확인
+                Debug.DrawLine(ray.origin, hit.point, Color.red, 0.1f);
+            }
+            else
+            {
+                // 충돌하지 않을 경우 카메라 방향으로 일정 거리로 설정
+                AimPoint = ray.origin + ray.direction * 100f;
+            }
         }
     }
 }

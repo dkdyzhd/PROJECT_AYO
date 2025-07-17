@@ -15,6 +15,7 @@ namespace AYO
     [CreateAssetMenu]
     public class WeaponItemData : ItemData
     {
+        public GameObject prefab;
         public WeaponType weaponType;
         public Vector3 rotation;
     }

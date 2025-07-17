@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UltEvents;
 
 namespace AYO
 {
@@ -13,19 +14,34 @@ namespace AYO
 
         //Item 스크립트를 활용하여 itemData 선언
         public ItemData itemData;
+        [Header("아이템")]
+        [SerializeField] private ItemData itemdata;
+        [Header("아이템 기능")]
+        [SerializeField] private UltEvent onUse;
+
+        public ItemData ItemData => itemdata;
+        public UltEvent OnUse => onUse;
 
 
         public void Interact()
         {
             InteractionUI.Instance.RemoveInteractionData(this);
 
-            // To do : Add Inventory
-            // var weaponItem = itemData as WeaponItem; //캐스팅
-
-            QuickSlotController.Instance.AddItem(itemData);
+            //QuickSlotController.Instance.AddItem(itemData);
+            QuickSlotController.Instance.AddItem(this);
 
             // 파괴를 제일 나중
-            Destroy(transform.root.gameObject);
+            //Destroy(transform.root.gameObject);
+            this.gameObject.SetActive(false);
+        }
+
+        public void Use()
+        {
+            onUse.Invoke();
+            if (itemData.isExpendable)
+            {
+                QuickSlotController.Instance.RemoveItem(itemData, 1);
+            }
         }
 
     }

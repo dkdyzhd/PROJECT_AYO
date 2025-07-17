@@ -35,8 +35,11 @@ namespace AYO
         //public Image image;
 
         [Header("Stacking")]
-        public bool canStack;
+        public bool isStackable;
         public int maxStackAmount;
+
+        [Header("Expendable")]
+        public bool isExpendable;
     }
 }
 

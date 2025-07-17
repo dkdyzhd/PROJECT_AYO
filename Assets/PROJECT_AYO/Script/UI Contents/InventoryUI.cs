@@ -58,13 +58,26 @@ namespace AYO
             }
         }
 
-        public void RefreshSlot(List<QuickSlotData> quickslotItems) // Update 는 매프레임 체크하는 것이기 때문에 AddItem 함수 마지막에 호출
+        //public void RefreshSlot(List<QuickSlotData> quickslotItems) // Update 는 매프레임 체크하는 것이기 때문에 AddItem 함수 마지막에 호출
+        //{
+        //    int i = 0;
+        //    for (; i < quickslotItems.Count && i < slots.Length; i++)
+        //    {
+        //        slots[i].Item = quickslotItems[i].itemData;
+        //        slots[i].Count = quickslotItems[i].quantity;
+        //    }
+        //    for (; i < slots.Length; i++)
+        //    {
+        //        slots[i].Item = null;
+        //    }
+        //}
+        public void RefreshSlot(List<SlotData> quickslotItems) // Update 는 매프레임 체크하는 것이기 때문에 AddItem 함수 마지막에 호출
         {
             int i = 0;
             for (; i < quickslotItems.Count && i < slots.Length; i++)
             {
-                slots[i].Item = quickslotItems[i].itemData;
-                slots[i].Count = quickslotItems[i].count;
+                slots[i].Item = quickslotItems[i].GetItemData();
+                slots[i].Count = quickslotItems[i].GetItemCount();
             }
             for (; i < slots.Length; i++)
             {

@@ -21,13 +21,14 @@ namespace AYO
 
         [Header("Camera Setting")]
         //***CinemachineCamera 사용 안함으로 주석처리
-        //public float cameraHorizontalSpeed = 2.0f;
-        //public float cameraVerticalSpeed = 2.0f;
+        public float cameraHorizontalSpeed = 2.0f;
+        public float cameraVerticalSpeed = 2.0f;
 
         //***총사용 할 때 CameraSetting을 위한 변수
         public Transform weaponTransform; // 총구 Transform
         public LayerMask aimLayer; // 레이캐스트를 감지할 레이어 (지면, 벽 등)
-        
+
+        public bool isFPSMode = false;
         private bool isAiming = false;
         private bool canAiming = false;
 
@@ -40,11 +41,11 @@ namespace AYO
         //public float defaultFOV;
 
         [Header("Camera Clamping")]
-        //***CinemachineCamera 사용 안함으로 주석처리
-        //public float topClamp = 70.0f;
-        //public float bottomClamp = -30.0f;
-        //public GameObject cinemachineCameraTarget;
-        //public float cameraAngleOverride = 0.0f;
+        //*** CinemachineCamera 사용 안함으로 주석처리
+        public float topClamp = 70.0f;
+        public float bottomClamp = -30.0f;
+        public GameObject cinemachineCameraTarget;
+        public float cameraAngleOverride = 0.0f;
 
         [Header("Animation Rigging")]
         public Transform aimTarget;
@@ -161,9 +162,10 @@ namespace AYO
             moveInput = new Vector2(horizontal, vertical);
 
             //---Mouse 이동에 따른 camera 움직임
-            //float hMouse = Input.GetAxis("Mouse X");
-            //float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
-            //look = new Vector2(hMouse, vMouse);
+            float hMouse = Input.GetAxis("Mouse X");
+            float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
+            look = new Vector2(hMouse, vMouse);
+            Debug.Log(look);
 
             isSprint = Input.GetKey(KeyCode.LeftShift);
 
@@ -182,7 +184,7 @@ namespace AYO
                 //To do : 클릭하면 먹는모션 -> 따로 UI 구현?
             }
             //***Shooting***
-            if (QuickSlotController.Instance.isFPSMode) //Gun 
+            if (isFPSMode) //Gun 
             {
                 var weaponGameObject = TransformUtility.FindGameObjectWithTag(weaponHolder, "Weapon");
                 currentWeapon = weaponGameObject.GetComponent<Weapon>(); //루프를 이용해서 찾기(하위에하위에하위에를 찾기는 힘듬, InChild는 하나의 하위까지만 찾아줌)
@@ -275,39 +277,44 @@ namespace AYO
         
         private void LateUpdate()
         {
-            //CameraRotation();
+            CameraRotation();
 
             // 정확한 Aiming을 위해 카메라와 캐릭터의 위치 및 회전 업데이트 타이밍이 일치하도록 조정
             
         }
 
-        //private void CameraRotation()
-        //{
-        //    // if there is an input and camera position is not fixed
-        //    if (look.sqrMagnitude >= _threshold)
-        //    {
-        //        //Don't multiply mouse input by Time.deltaTime;
-        //        float deltaTimeMultiplier = 1.0f;
+        private void CameraRotation()   // 시네머신
+        {
+            // if there is an input and camera position is not fixed
+            if (look.sqrMagnitude >= _threshold)
+            {
+                //Don't multiply mouse input by Time.deltaTime;
+                float deltaTimeMultiplier = 1.0f;
 
-        //        cinemachineTargetYaw += look.x * deltaTimeMultiplier * cameraHorizontalSpeed;
-        //        cinemachineTargetPitch += look.y * deltaTimeMultiplier * cameraVerticalSpeed;
-        //    }
+                cinemachineTargetYaw += look.x * deltaTimeMultiplier * cameraHorizontalSpeed;
+                cinemachineTargetPitch += look.y * deltaTimeMultiplier * cameraVerticalSpeed;
+            }
 
-        //    // clamp our rotations so our values are limited 360 degrees
-        //    cinemachineTargetYaw = ClampAngle(cinemachineTargetYaw, float.MinValue, float.MaxValue);
-        //    cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, topClamp);
+            // clamp our rotations so our values are limited 360 degrees
+            cinemachineTargetYaw = ClampAngle(cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, topClamp);
 
-        //    // Cinemachine will follow this target
-        //    cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
-        //        cinemachineTargetYaw, 0.0f);
-        //}
-
+            // Cinemachine will follow this target
+            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
+                cinemachineTargetYaw, 0.0f);
+        }
+        public void ToggleFPSMode(bool isOn)
+        {
+            animator.SetBool("isFPSMode", isOn);
+            isFPSMode = isOn;
+        }
         private void MoveAndAiming()
         {
             //if (!isEnableMovement)
             //return;
 
-            canAiming = QuickSlotController.Instance.isFPSMode;
+            //canAiming = QuickSlotController.Instance.isFPSMode;
+            canAiming = isFPSMode; // && currentWeapon.weaponData.weaponType == WeaponType.Gun;
             isAiming = Input.GetMouseButton(1);
             bool isMoving = moveInput != Vector2.zero;
 
@@ -374,9 +381,11 @@ namespace AYO
         public void IsAiming()
         {
             // 에임 모드 : 에임 포인트를 기준으로 캐릭터 회전 (카메라 컨트롤러에서 조준 지점 가져오기 )
-            Vector3 targetPosition = Camera_Ctrl.Instance.AimPoint;
+            //Vector3 targetPosition = Camera_Ctrl.Instance.AimPoint;
+            //lookDirection.y = 0;    // 수평 방향만 고려
+
+            Vector3 targetPosition = CameraSystem.Instance.AimPoint;
             Vector3 lookDirection = targetPosition - transform.position;
-            lookDirection.y = 0;    // 수평 방향만 고려
 
             if (lookDirection.sqrMagnitude > 0.01f)
             {

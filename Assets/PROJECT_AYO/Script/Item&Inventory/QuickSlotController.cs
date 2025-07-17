@@ -10,12 +10,14 @@ namespace AYO
     public class QuickSlotData
     {
         public ItemData itemData;
-        public int count;
+        public int quantity;
     }
 
     public class QuickSlotController : MonoBehaviour
     {
         public static QuickSlotController Instance { get; private set; } = null;
+
+        private List<SlotData> slotDataList = new List<SlotData>(); //리팩토링
 
         [HideInInspector]
         public int selectedSlot;   //선택된 퀵슬롯의 인덱스
@@ -29,63 +31,22 @@ namespace AYO
 
         //아이템과 충분한 양이 있는지 확인하기 위함
         public Dictionary<ItemData, int> quickSlotItems = new Dictionary<ItemData, int>();
+
         public bool HasItem(ItemData item, int quantity)
         {
-            if (!quickSlotItems.ContainsKey(item))
+            foreach (SlotData slotData in slotDataList)
             {
-                Debug.Log($"HasItem() 실패: {item.itemName}이 퀵슬롯에 없음!");
-                return false;
-            }
-
-            if (quickSlotItems[item] < quantity)
-            {
-                Debug.Log($"HasItem() 실패: {item.itemName} 개수 부족! 필요: {quantity}, 보유: {quickSlotItems[item]}");
-                return false;
-            }
-
-            return true;
-
-            //return quickSlotItems.ContainsKey(item) && quickSlotItems[item] >= quantity;
-        }
-
-        public void RemoveItem(ItemData item, int quantity)
-        {
-            int index = GetExistItemStackable(item, out QuickSlotData result);
-            int slotIndex = quickSlotDatas.IndexOf(result);   //배열의 인덱스를 뽑아내는 함수
-            if (result != null && index > 0)
-            {
-                result.count -= quantity;
-                if(result.count <= 0)
-                {// 다쓰면 아이템데이터가 퀵슬롯에서 없어지도록
-                    quickSlotDatas[slotIndex].itemData = null;
+                if (slotData.GetItemData() == item)
+                {
+                    if (slotData.GetItemCount() >= quantity)
+                    {
+                        return true;
+                    }
                 }
             }
-
-            // Dictionary에서도 차감
-            quickSlotItems[item] -= quantity;
-            if (quickSlotItems[item] <= 0)
-            {
-                quickSlotItems.Remove(item);
-            }
-
-            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+            return false;
         }
-        //public void RemoveItem(QuickSlotData item, int quantity)
-        //{
-        //    item.count -= quantity;
-        //    if (item.count <= 0)
-        //    {
-        //        //Remove(item);
-        //        //퀵슬롯.데이
-        //        if (item.count <= 0)
-        //        {
-        //            item.itemData = null;
-        //        }
-
-        //        InventoryUI.Instance.RefreshSlot(quickSlotDatas);
-        //    }
-        //}
-
+        
         public bool isFPSMode = false;
 
         public bool isDragging = false;
@@ -103,7 +64,7 @@ namespace AYO
         private void Start()
         {
             selectedSlot = 0;
-            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+            InventoryUI.Instance.RefreshSlot(slotDataList);
         }
 
         private void Update()
@@ -142,39 +103,20 @@ namespace AYO
         private void ChangeSlot(int slotnum)
         {
             SelectedSlot(slotnum);
-            UseItem();
+            //UseItem();
         }
 
+        // 퀵슬롯 선택 & 사용
         private void SelectedSlot(int slotnum)
         {
             selectedSlot = slotnum; //선택된 슬롯
             InventoryUI.Instance.SelectItem(slotnum);
+
+            InteractionItem item = slotDataList[slotnum].GetItem();
+            item.Use();
+            // to do : 슬롯이 비어있을경우 들고 있던 무기를 내려놓기? 무기를 내려놓는건 어떻게 할지 고민
         }
 
-        private void OnHolder()
-        {
-            currentEquipWeaponData = weaponData;    //새로 받아온 데이터 입력
-            if (currentEquipWeaponData.weaponType == WeaponType.Gun)
-            {
-                ToggleFPSMode(true);
-            }
-
-            //To do : Holder에 들게하기
-            GameObject newWeapon = Instantiate(weaponData.itemPrefab);  //새로 받아온데이터의 itemPrefab 생성
-            newWeapon.transform.parent = holder.transform;
-            newWeapon.transform.localPosition = Vector3.zero;
-            newWeapon.transform.localRotation = Quaternion.Euler(weaponData.rotation);
-
-            // 무기 충돌 활성화 설정
-            var weaponHandler = newWeapon.GetComponent<WeaponCollisionHandler>();
-            if(weaponHandler != null )
-            {
-                weaponHandler.enabled = false;  //기본적으로 비활성화 (공격중 충돌 활성화 할 것)
-            }
-
-            currentEquipWeapon = newWeapon;
-        }
-        
         public void EnableWeaponCollision()
         {
             if (currentEquipWeapon != null)
@@ -199,140 +141,86 @@ namespace AYO
             }
         }
 
-        // ------------------------- 퀵슬롯 사용 -------------------------------------------------------
-        private void RemoveWeapon()
-        {
-            if (currentEquipWeapon != null)     //들고있는 무기가 있다면
-            {
-                Destroy(currentEquipWeapon);    //무기 삭제
-                currentEquipWeapon = null;  //null값으로 만들기
-            }
-
-            if (currentEquipWeaponData != null && currentEquipWeaponData.weaponType == WeaponType.Gun)
-            {
-                ToggleFPSMode(false);
-            }
-            
-            currentEquipWeaponData = null;
-        }
-
         private void Eat(QuickSlotData slotData)
         {
             AyoPlayerController.Instance.animator.SetTrigger("Trigger_Eat");
             PlayerCondition.Instance.Eat(5);
 
-            slotData.count--;
+            slotData.quantity--;
             int index = quickSlotDatas.IndexOf(slotData);   //배열의 인덱스를 뽑아내는 함수
-            InventoryUI.Instance.SetQuickSlotCount(index, slotData.count);
-            if (slotData.count <= 0)
+            InventoryUI.Instance.SetQuickSlotCount(index, slotData.quantity);
+            if (slotData.quantity <= 0)
             {
                 quickSlotDatas[selectedSlot].itemData = null;
             }
 
-            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+            InventoryUI.Instance.RefreshSlot(slotDataList);
         }
-
-        private void ToggleFPSMode(bool isOn)
-        {
-            AyoPlayerController.Instance.animator.SetBool("isFPSMode", isOn);
-
-
-            //bool isFPSMode = weaponData.weaponType == WeaponType.Gun;
-            isFPSMode = weaponData.weaponType == WeaponType.Gun;
-            if (isFPSMode)
-            {
-            }
-            else
-            {
-                AyoPlayerController.Instance.animator.SetBool("isFPSMode", isOn);
-            }
-
-        }
-
-        private void UseItem()
-        {
-            if (selectedSlot >= quickSlotDatas.Count)   //빈 퀵슬롯을 선택했을때
-            {
-                if (currentEquipWeaponData != null) //현재 무기데이터가 있고
-                {
-                    RemoveWeapon();
-                }
-                return;
-            }
-
-            bool isExistItemData = quickSlotDatas[selectedSlot].itemData != null;
-
-            if (isExistItemData)  //퀵슬롯에 아이템이 있다면
-            {
-                bool isWeaponData = quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Weapon;
-                //아이템타입이 Weapon이라면
-                if (isWeaponData)
-                {
-                    if (currentEquipWeaponData != null) //현재 무기데이터가 있고
-                    {
-                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
-                        if (currentEquipWeaponData != weaponData)   //새로 받아온 무기아이템데이터와 같지 않다면
-                        {
-                            RemoveWeapon();
-                            OnHolder();
-                        }
-                        else    //새로 받아온 무기아이템데이터가 같다면(다시 눌러서 무기 내리기)
-                        {
-                            RemoveWeapon(); //무기 내려놓기
-                        }
-                    }
-                    else    //현재 무기데이터가 없다면
-                    {
-                        weaponData = quickSlotDatas[selectedSlot].itemData as WeaponItemData;
-                        OnHolder();
-                    }
-                }
-                //아이템타입이 Food라면
-                else if (quickSlotDatas[selectedSlot].itemData.itemType == ItemType.Food && !isWeaponData)
-                {
-                    AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
-                    //To do : 맨손 & animation settrigger Eat
-                    RemoveWeapon();
-                    //currentEquipWeaponData = null;
-                    Eat(quickSlotDatas[selectedSlot]);
-
-                }
-                else
-                {
-                    //To do : 맨손 -> (Holder SetActive(false))
-                    AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
-                    RemoveWeapon();
-                }
-            }
-            else
-            {
-                //To do : 맨손
-                AyoPlayerController.Instance.animator.SetBool("isFPSMode", false);
-                RemoveWeapon();
-            }
-        }
-
 
         // ------------------------ 아이템 획득한 후 인벤토리에 추가되는 로직 -----------------------------
+        // 리팩토링된 AddItem 메서드
+        public void AddItem(InteractionItem item)
+        {
+            // 스택가능한 아이템이라면
+            if (item.ItemData.isStackable)
+            {
+                // GetExistItemStackable() 호출 -> 이미 존재하는 동일한 아이템찾기
+                //index : 슬롯의 위치 / result : 해당 슬롯의 SlotData
+                int index = GetExistItemStackable(item.ItemData, out SlotData result);
+                if (result != null && index >= 0)
+                {
+                    // 기존 아이템이 있으면  슬롯 아이템 count++ 
+                    result.SetSlotItemCount(1);
+                    Debug.Log($" 기존 아이템 {item.ItemData.itemName} 개수 증가: {result.GetItemCount()}");
+
+                    // To do :  인벤토리 count에도 적용
+                    //invenUI.SetSlotUICount(index, result.GetItemCount());
+                    InventoryUI.Instance.SetQuickSlotCount(index, result.GetItemCount());
+                    return;
+                }
+            }
+
+            // 빈 슬롯 찾기 & 새로운칸을 만들어야 할 때 그 인덱스 저장
+            int i = 0;
+            for (i = 0; i < slotDataList.Count; i++)      //데이터 리스트의 번호만 알려줌
+            {
+                if (slotDataList[i].GetItemData() == null)
+                {
+                    //slotDataList[i] = slotdata;       //*** 20250528_ 수정해야됨
+                    break;
+                }
+            }
+
+            // 새 아이템 추가
+            SlotData slotdata = new SlotData();
+            slotdata.SetSlotItem(item);     // *** 20250528_ 그냥 item 으로 아이템 자체를 넘겨주기
+            slotdata.SetSlotItemCount(1);
+            slotDataList.Add(slotdata);
+            Debug.Log($" 새 아이템 추가: {item.ItemData.itemName}, 개수: 1");
+
+            InventoryUI.Instance.RefreshSlot(slotDataList);
+        }
+        //----------------------------------------------------------------------------------------------
+        // 기존
         public void AddItem(ItemData itemData)
         {
-            if (itemData.canStack)  //쌓을수 있는 아이템이라면
+            if (itemData.isStackable)  //쌓을수 있는 아이템이라면
             {
                 // GetExistItemStackable() 호출 -> 이미 존재하는 동일한 아이템찾기
                 //index : 슬롯의 위치 / result : 해당 슬롯의 QuickSlotData
                 int index = GetExistItemStackable(itemData, out QuickSlotData result);
                 if (result != null && index >= 0)
                 {// 기존 아이템이 있으면 개수 ++ & UI 갱신
-                    result.count++;
+                    result.quantity++;
 
                     // Dictionary에도 함께 반영
                     if (quickSlotItems.ContainsKey(itemData))
                         quickSlotItems[itemData]++;
                     else
-                        quickSlotItems[itemData] = result.count;
+                        quickSlotItems[itemData] = result.quantity;
 
-                    InventoryUI.Instance.SetQuickSlotCount(index, result.count);
-                    Debug.Log($" 기존 아이템 {itemData.itemName} 개수 증가: {result.count}");
+                    InventoryUI.Instance.SetQuickSlotCount(index, result.quantity);
+                    Debug.Log($" 기존 아이템 {itemData.itemName} 개수 증가: {result.quantity}");
                     return;
                 }
             }
@@ -343,20 +231,20 @@ namespace AYO
                 if (quickSlotDatas[i].itemData == null)
                 {
                     quickSlotDatas[i].itemData = itemData;
-                    quickSlotDatas[i].count = 1;
+                    quickSlotDatas[i].quantity = 1;
 
                     // Dictionary에도 추가
                     quickSlotItems[itemData] = 1;
 
 
                     Debug.Log($" 새 아이템 추가: {itemData.itemName}, 개수: 1");
-                    InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+                    InventoryUI.Instance.RefreshSlot(slotDataList);
                     return;
                 }
             }
 
             //빈슬롯이 없을 경우, 새로운 슬롯 데이터를 생성
-            var newQuickSlotData = new QuickSlotData() { itemData = itemData, count = 1, };
+            var newQuickSlotData = new QuickSlotData() { itemData = itemData, quantity = 1, };
             quickSlotDatas.Add(newQuickSlotData);
 
             // Dictionary에도 추가
@@ -364,14 +252,30 @@ namespace AYO
 
 
             Debug.Log($" 새로운 슬롯에 아이템 추가: {itemData.itemName}, 개수: 1");
-            InventoryUI.Instance.RefreshSlot(quickSlotDatas);
+            InventoryUI.Instance.RefreshSlot(slotDataList);
         }
-
+        //----------------------------------------------------------------------------------------------
+        // 리팩토링된 GetExistItemStackable 메서드
+        public int GetExistItemStackable(ItemData itemData, out SlotData resultData)
+        {
+            for (int i = 0; i < slotDataList.Count; i++)
+            {
+                if (slotDataList[i] != null && slotDataList[i].GetItemData() == itemData)
+                {
+                    resultData = slotDataList[i];
+                    return i;
+                }
+            }
+            resultData = null;
+            return -1;  // 없으면 -1 반환
+        }
+        //----------------------------------------------------------------------------------------------
+        // 기존
         private int GetExistItemStackable(ItemData itemData, out QuickSlotData resultData)
         {
             for (int i = 0; i < quickSlotDatas.Count; i++)
             {   // 같은 아이템이 있는 슬롯이 있으면서 && 최대 스택을 초과하지 않은 경우
-                if (quickSlotDatas[i].itemData == itemData && quickSlotDatas[i].count < itemData.maxStackAmount)
+                if (quickSlotDatas[i].itemData == itemData && quickSlotDatas[i].quantity < itemData.maxStackAmount)
                 {
                     resultData = quickSlotDatas[i]; // 찾은 퀵슬롯데이터를 resultData에 저장
                     return i;   // 슬롯 인덱스를 반환
@@ -380,6 +284,51 @@ namespace AYO
 
             resultData = null;
             return -1;      // 없으면 -1 반환
+        }
+        //----------------------------------------------------------------------------------------------
+        // 기존
+        public void RemoveItem(ItemData item, int quantity)
+        {
+            int index = GetExistItemStackable(item, out QuickSlotData result);
+            int slotIndex = quickSlotDatas.IndexOf(result);   //배열의 인덱스를 뽑아내는 함수
+            if (result != null && index > 0)
+            {
+                result.quantity -= quantity;
+                if (result.quantity <= 0)
+                {// 다쓰면 아이템데이터가 퀵슬롯에서 없어지도록
+                    quickSlotDatas[slotIndex].itemData = null;
+                }
+            }
+
+            // Dictionary에서도 차감
+            quickSlotItems[item] -= quantity;
+            if (quickSlotItems[item] <= 0)
+            {
+                quickSlotItems.Remove(item);
+            }
+
+            InventoryUI.Instance.RefreshSlot(slotDataList);
+        }
+        //----------------------------------------------------------------------------------------------
+        // 리팩토링된 ItemRemove 메서드
+        public void ItemRemove(ItemData item, int quantity)
+        {
+            int index = GetExistItemStackable(item, out SlotData result);   //result가 null이면 -1을 반환
+            int slotIndex = slotDataList.IndexOf(result);   // 따로 리스트의 인덱스를 뽑아내는 함수를g= 활용하여 저장
+
+
+            if (result != null && index >= 0)
+            {
+                result.SetSlotItemCount(-quantity);
+                if (result.GetItemCount() <= 0)
+                {   // 다쓰면 아이템데이터가 퀵슬롯에서 없어지도록
+                    //slotDataList.Remove(result);    // => 뒤 아이템들이 다 땡겨짐
+                    slotDataList[slotIndex].SetSlotItem(null);    // => 빈 칸이 그대로 남아있음
+                }
+            }
+
+            //invenUI.RefreshUI(slotDataList);
+            InventoryUI.Instance.RefreshSlot(slotDataList);
         }
     }
 }

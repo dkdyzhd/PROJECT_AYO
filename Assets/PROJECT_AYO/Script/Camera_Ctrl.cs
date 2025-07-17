@@ -190,9 +190,10 @@ public class Camera_Ctrl : MonoBehaviour
         //마우스 포인터 위치에서 레이 발사
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+
         // 지면과 교차점을 계산
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);  //y=0 평면 생성
-        if(groundPlane.Raycast(ray, out float distance))
+        if (groundPlane.Raycast(ray, out float distance))
         {
             aimPoint = ray.GetPoint(distance); //교차 지점을 aimPoint로 설정
         }
@@ -202,7 +203,7 @@ public class Camera_Ctrl : MonoBehaviour
         }
 
         // 이동중인 캐릭터의 위치를 기준으로 보정
-        if(m_Player != null)
+        if (m_Player != null)
         {
             Vector3 playerPosition = m_Player.transform.position;
             aimPoint = new Vector3(aimPoint.x, playerPosition.y, aimPoint.z);   //캐릭터 높이로
