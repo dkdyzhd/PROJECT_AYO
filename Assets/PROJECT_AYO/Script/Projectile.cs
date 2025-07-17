@@ -19,6 +19,7 @@ namespace AYO
 
         private void Update()
         {
+            // transform.Translate(transform.forward * speed * Time.deltaTime);
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
 
