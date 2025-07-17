@@ -165,7 +165,7 @@ namespace AYO
             float hMouse = Input.GetAxis("Mouse X");
             float vMouse = Input.GetAxis("Mouse Y") * -1;  // 상하반전
             look = new Vector2(hMouse, vMouse);
-            Debug.Log(look);
+            //Debug.Log(look);
 
             isSprint = Input.GetKey(KeyCode.LeftShift);
 
@@ -277,13 +277,13 @@ namespace AYO
         
         private void LateUpdate()
         {
-            CameraRotation();
+            // CameraRotation();    // 시네머신 카메라 회전
 
             // 정확한 Aiming을 위해 카메라와 캐릭터의 위치 및 회전 업데이트 타이밍이 일치하도록 조정
-            
+
         }
 
-        private void CameraRotation()   // 시네머신
+        private void CameraRotation()   // 시네머신 카메라 회전
         {
             // if there is an input and camera position is not fixed
             if (look.sqrMagnitude >= _threshold)
@@ -381,10 +381,10 @@ namespace AYO
         public void IsAiming()
         {
             // 에임 모드 : 에임 포인트를 기준으로 캐릭터 회전 (카메라 컨트롤러에서 조준 지점 가져오기 )
-            //Vector3 targetPosition = Camera_Ctrl.Instance.AimPoint;
+            //Vector3 targetPosition = CameraSystem.Instance.AimPoint;
             //lookDirection.y = 0;    // 수평 방향만 고려
 
-            Vector3 targetPosition = CameraSystem.Instance.AimPoint;
+            Vector3 targetPosition = Camera_Ctrl.Instance.AimPoint;     // 쿼터뷰 카메라ctrl
             Vector3 lookDirection = targetPosition - transform.position;
 
             if (lookDirection.sqrMagnitude > 0.01f)

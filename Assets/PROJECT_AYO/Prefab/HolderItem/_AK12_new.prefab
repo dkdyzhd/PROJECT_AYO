@@ -177,9 +177,10 @@ GameObject:
   - component: {fileID: 6628717167257018322}
   - component: {fileID: 1411420045707577168}
   - component: {fileID: 140836527035226160}
+  - component: {fileID: 8011310092401078157}
   m_Layer: 0
   m_Name: _AK12_new
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MuzzlePrefab: {fileID: 1182406914585020, guid: fdac2b543efe1164abc20e40e85905c2, type: 3}
-  bulletPrefab: {fileID: 8169951506285211121, guid: 79889446ca852174a8ae975a04b685fc, type: 3}
+  bulletPrefab: {fileID: 4820746207183030764, guid: 9ef4ac18f8a22954590ea5f4d957e125, type: 3}
   firePosition: {fileID: 7204657873251130027, guid: eea5475b7b9012b45b34c4fb76ab7222, type: 3}
   player: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 719bf340f7b4c1d4ca9745401350c7eb, type: 2}
@@ -239,6 +240,27 @@ MonoBehaviour:
     - _Target: {fileID: 1411420045707577168}
       _MemberName: OnHolder
       _PersistentArguments: []
+--- !u!135 &8011310092401078157
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479190083304695297}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &920463417627881710
 GameObject:
   m_ObjectHideFlags: 0

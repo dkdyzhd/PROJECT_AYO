@@ -214,7 +214,7 @@ public class Camera_Ctrl : MonoBehaviour
             Vector3 playerPosition = m_Player.transform.position;
             aimPoint = new Vector3(aimPoint.x, playerPosition.y, aimPoint.z);   //캐릭터 높이로
 
-            Debug.Log(aimPoint);
+            //Debug.Log(aimPoint);
             raycastHitTest.position = aimPoint;
         }
 
