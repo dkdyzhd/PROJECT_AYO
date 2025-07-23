@@ -104,12 +104,6 @@ namespace AYO
 
                 lastShootTime = Time.time;
 
-                //create Muzzle
-                var newMuzzle = Instantiate(MuzzlePrefab);
-                newMuzzle.transform.SetPositionAndRotation(firePosition.position, firePosition.rotation);
-                newMuzzle.gameObject.SetActive(true);
-                Destroy(newMuzzle, 1f);
-
                 // Create Bullet
                 var newBullet = Instantiate(bulletPrefab);
                 newBullet.transform.position = transform.position;
@@ -117,6 +111,12 @@ namespace AYO
                 //총에서 총알이 나가는 것으로 변경(카메라 -> 총구)
                 // newBullet.transform.SetPositionAndRotation(firePosition.position, firePosition.rotation);
                 newBullet.gameObject.SetActive(true);
+
+                //create Muzzle
+                var newMuzzle = Instantiate(MuzzlePrefab);
+                newMuzzle.transform.SetPositionAndRotation(firePosition.position, firePosition.rotation);
+                newMuzzle.gameObject.SetActive(true);
+                Destroy(newMuzzle, 1f);
 
                 //두 오브젝트가 서로 충돌처리가 되지 않게 Unity Physics Engine에게 무시하도록 지시
                 Physics.IgnoreCollision(newBullet.GetComponent<Collider>(), transform.root.GetComponent<Collider>());

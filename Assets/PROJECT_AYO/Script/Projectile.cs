@@ -6,8 +6,8 @@ namespace AYO
 {
     public class Projectile : MonoBehaviour
     {
-        public float speed = 30f;
-        public float lifeTime = 10f;
+        [SerializeField] private float speed = 30f;
+        [SerializeField] private float lifeTime = 10f;
 
         public GameObject metalImpactPrefab;
         public GameObject woodImpactPrefab;
